@@ -1,7 +1,5 @@
 import tensorflow as tf
 
-hello = tf.constant('Hello, TensorFlow running in Docker!!')
+hello = tf.constant('Hello, TensorFlow {} running in Docker!!'.format(tf.__version__))
 
-sess = tf.Session()
-
-print(sess.run(hello))
+tf.print(hello)
