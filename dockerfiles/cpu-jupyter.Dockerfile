@@ -11,5 +11,7 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN python3 --version
 
-RUN git clone --branch=develop https://github.com/midusi/handshape_datasets.git lib/handshape_datasets
-RUN pip3 install lib/handshape_datasets
+RUN git clone --branch=develop https://github.com/midusi/handshape_datasets.git /tf/lib/handshape_datasets
+RUN pip3 install /tf/lib/handshape_datasets
+
+WORKDIR /tf/
