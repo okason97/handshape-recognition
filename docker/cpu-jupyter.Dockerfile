@@ -1,25 +1,53 @@
-FROM tensorflow/tensorflow:latest-py3-jupyter
+ARG UBUNTU_VERSION=latest
+
+FROM ubuntu:${UBUNTU_VERSION} as base
+
+ARG USE_PYTHON_3_NOT_2=ON
+ARG _PY_SUFFIX=${USE_PYTHON_3_NOT_2:+3}
+ARG PYTHON=python${_PY_SUFFIX}
+ARG PIP=pip${_PY_SUFFIX}
+
+ENV LANG C.UTF-8
 
 ADD . /develop
 
-COPY notebooks /tf/notebooks
+COPY notebooks /src/notebooks
 
-RUN pip install --upgrade pip && \
-    pip3 uninstall -y tensorflow && \
-    pip3 install tensorflow==2.0.0-alpha0
-    
 RUN apt-get update -q
-RUN apt-get install -y software-properties-common python-software-properties
-RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update -q
-RUN apt-get install -y python3.6 git
-
+RUN apt-get install -y ${PYTHON} ${PYTHON}-pip git
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN python3 --version
+RUN ${PIP} --no-cache-dir install --upgrade \
+    pip \
+    setuptools
 
-RUN git clone --branch=develop https://github.com/midusi/handshape_datasets.git lib/handshape_datasets
-RUN cd lib/handshape_datasets
+# Some TF tools expect a "python" binary
+RUN ln -s $(which ${PYTHON}) /usr/local/bin/python 
 
-EXPOSE 8000
+# Options:
+#   tensorflow
+#   tensorflow-gpu
+#   tf-nightly
+#   tf-nightly-gpu
+# Set --build-arg TF_PACKAGE_VERSION=1.11.0rc0 to install a specific version.
+# Installs the latest version by default.
+ARG TF_PACKAGE=tensorflow
+ARG TF_PACKAGE_VERSION=2.0.0-alpha0
+RUN ${PIP} install ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
+
+COPY bashrc /etc/bash.bashrc
+RUN chmod a+rwx /etc/bash.bashrc
+
+RUN ${PIP} install jupyter matplotlib
+RUN ${PIP} install jupyter_http_over_ws
+RUN jupyter serverextension enable --py jupyter_http_over_ws
+
+RUN ${PYTHON} --version
+
+WORKDIR /src/
+EXPOSE 8888
+
+RUN ${PYTHON} -m ipykernel.kernelspec
+
+CMD ["bash", "-c", "source /etc/bash.bashrc && jupyter notebook --notebook-dir=/src/ --ip 0.0.0.0 --no-browser --allow-root"]
