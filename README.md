@@ -11,7 +11,7 @@ $ ./bin/start
 Build the docker image,
 
 ```sh
-$ docker build --rm -f Dockerfile -t sign-language-recognition:latest .
+$ docker build --rm -f docker/cpu-jupiter.Dockerfile -t sign-language-recognition:latest .
 ```
 
 and now run the image
