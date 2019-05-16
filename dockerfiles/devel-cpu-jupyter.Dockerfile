@@ -1,4 +1,4 @@
-FROM ulisesjeremias/tf-docker:cpu-jupyter
+FROM ulisesjeremias/tf-docker:devel-cpu-jupyter
 
 ADD . /develop
 COPY notebooks /tf/notebooks
@@ -16,4 +16,4 @@ RUN chmod -R a+rwx /tf/
 RUN git clone --branch=develop https://github.com/midusi/handshape_datasets.git /tf/lib/handshape_datasets
 RUN pip3 install /tf/lib/handshape_datasets
 
-WORKDIR /tf/
+WORKDIR /tf
