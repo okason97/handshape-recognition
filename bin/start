@@ -13,4 +13,4 @@ name=${name:-"sign-language-recognition"}
 echo "Creating $name container with tag $tag" 
 
 docker build --rm -f dockerfiles/$tag.Dockerfile -t $name:$tag . && \
-docker run --rm -u $(id -u):$(id -g) -p 6006:6006 -p 8888:8888 $name:$tag
+docker run -v /home/lidi/jupyter:/tmp --rm -u $(id -u):$(id -g) -p 6006:6006 -p 8888:8888 $name:$tag
