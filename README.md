@@ -1,10 +1,35 @@
 # Sign Language Recognition
 
+## Models
+
+# Prototypical Networks for Few-shot Learning
+
+Tensorflow v2 implementation of NIPS 2017 Paper _Prototypical Networks for Few-shot Learning_.
+
+First install [protonet](https://github.com/ulises-jeremias/prototypical-networks-tf).
+
+Run the following command to run training on lsa16 with default parameters.
+
+```sh
+$ python protonet-tf/train/run_train.py --config protonet-tf/config_lsa16.conf
+```
+
+## Evaluating
+
+To run evaluation on lsa16
+
+```sh
+$ python protonet-tf/eval/run_eval.py --config protonet-tf/config_lsa16.conf
+```
+
+
 ## Quickstart
 
 ```sh
-$ ./bin/start
+$ ./bin/start -t <tag-name>
 ```
+
+`<tag-name> = cpu | devel-cpu | gpu`
 
 ## Setup and use docker
 
@@ -32,10 +57,4 @@ And then you can find the entire source code in `/develop`.
 
 ```sh
 $ cd /develop
-```
-
-Test the environment as follow,
-
-```sh
-$ python starterfile.py
 ```
