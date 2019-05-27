@@ -11,10 +11,8 @@ import tensorflow as tf
 tf.config.gpu.set_per_process_memory_growth(True)
 
 from protonet.models import Prototypical
+from protonet.data import load
 from protonet import TrainEngine
-
-from data import load
-
 
 def train(config):
     np.random.seed(2019)

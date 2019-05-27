@@ -16,8 +16,7 @@ RUN python3 --version
 RUN git clone --branch=develop https://github.com/midusi/handshape_datasets.git /develop/lib/handshape_datasets
 RUN pip3 install -e /develop/lib/handshape_datasets
 
-RUN git clone https://github.com/ulises-jeremias/prototypical-networks-tf.git /develop/lib/prototypical-networks-tf
-RUN pip3 install -e /develop/lib/prototypical-networks-tf
+RUN pip3 install -e /develop/protonet-tf
 
 RUN mkdir -p /.handshape_datasets
 RUN chmod -R a+rwx /.handshape_datasets

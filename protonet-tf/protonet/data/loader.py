@@ -13,6 +13,7 @@ def load(data_dir, config, splits):
     as tensorflow Dataset objects.
 
     """
+
     if config['data.dataset'] == "lsa16":
         ds = load_lsa16(data_dir, config, splits)
     else:
