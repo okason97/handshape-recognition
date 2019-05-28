@@ -11,7 +11,7 @@ Implementation based on [protonet](https://github.com/ulises-jeremias/prototypic
 Run the following command to run training on `<config>` with default parameters.
 
 ```sh
-$ ./bin/protonet -m train -c <config>
+$ ./bin/protonet --mode train --config <config>
 ```
 
 `<config> = ciarp | lsa16 | rwth`
@@ -21,7 +21,7 @@ $ ./bin/protonet -m train -c <config>
 To run evaluation on lsa16
 
 ```sh
-$ ./bin/protonet -m eval -c <config>
+$ ./bin/protonet --mode eval --config <config>
 ```
 
 `<config> = ciarp | lsa16 | rwth`

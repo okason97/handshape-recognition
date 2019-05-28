@@ -2,8 +2,8 @@
 
 . bin/scripts/flags/declares.sh
 
-variables["-m"]="mode"
-variables["-c"]="config"
+variables["--mode"]="mode"
+variables["--config"]="config"
 
 . bin/scripts/flags/arguments.sh
 
