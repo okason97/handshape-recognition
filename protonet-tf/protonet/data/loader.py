@@ -1,4 +1,6 @@
 from .lsa16 import load_lsa16
+from .rwth import load_rwth
+from .ciarp import load_ciarp
 
 def load(data_dir, config, splits):
     """
@@ -16,6 +18,10 @@ def load(data_dir, config, splits):
 
     if config['data.dataset'] == "lsa16":
         ds = load_lsa16(data_dir, config, splits)
+    elif config['data.dataset'] == "rwth":
+        ds = load_rwth(data_dir, config, splits)
+    elif config['data.dataset'] == "ciarp":
+        ds = load_ciarp(data_dir, config, splits)
     else:
         raise ValueError(f"Unknow dataset: {config['data.dataset']}")
 

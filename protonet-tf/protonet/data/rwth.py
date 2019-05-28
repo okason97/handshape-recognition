@@ -27,9 +27,9 @@ class DataLoader(object):
 
         return support, query
 
-def load_lsa16(data_dir, config, splits):
+def load_rwth(data_dir, config, splits):
     """
-    Load lsa16 dataset.
+    Load rwth dataset.
 
     Args:
         data_dir (str): path of the directory with 'splits', 'data' subdirs.
@@ -40,8 +40,8 @@ def load_lsa16(data_dir, config, splits):
 
     """
 
-    DATASET_NAME = "lsa16"
-    DATASET_PATH = "/develop/data/lsa16/data"
+    DATASET_NAME = "rwth"
+    DATASET_PATH = "/develop/data/rwth/data"
 
     loadedData = hd.load(DATASET_NAME, DATASET_PATH)
 

@@ -6,22 +6,25 @@
 
 Tensorflow v2 implementation of NIPS 2017 Paper _Prototypical Networks for Few-shot Learning_.
 
-First install [protonet](https://github.com/ulises-jeremias/prototypical-networks-tf).
+Implementation based on [protonet](https://github.com/ulises-jeremias/prototypical-networks-tf).
 
-Run the following command to run training on lsa16 with default parameters.
+Run the following command to run training on `<config>` with default parameters.
 
 ```sh
-$ python protonet-tf/train/run_train.py --config protonet-tf/config_lsa16.conf
+$ ./bin/protonet -m train -c <config>
 ```
+
+`<config> = ciarp | lsa16 | rwth`
 
 ## Evaluating
 
 To run evaluation on lsa16
 
 ```sh
-$ python protonet-tf/eval/run_eval.py --config protonet-tf/config_lsa16.conf
+$ ./bin/protonet -m eval -c <config>
 ```
 
+`<config> = ciarp | lsa16 | rwth`
 
 ## Quickstart
 
