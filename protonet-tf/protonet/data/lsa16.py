@@ -2,8 +2,9 @@ import os
 import glob
 import numpy as np
 import tensorflow as tf
-from sklearn.model_selection import train_test_split
 import handshape_datasets as hd
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
 class DataLoader(object):
@@ -27,6 +28,42 @@ class DataLoader(object):
 
         return support, query
 
+def load_lsa16_vanilla(features, classes):
+    x_train, x_test, y_train, y_test = train_test_split(features,
+                                                        classes,
+                                                        test_size=0.5,
+                                                        random_state=0,
+                                                        stratify=classes)
+    x_train, x_test = x_train / 255.0, x_test / 255.0
+
+    return x_train, x_test, y_train, y_test
+
+def load_lsa16_processed(features, classes):
+    x_train, x_test, y_train, y_test = train_test_split(features,
+                                                        classes,
+                                                        test_size=0.5,
+                                                        random_state=0,
+                                                        stratify=classes)
+    x_train, x_test = x_train / 255.0, x_test / 255.0
+
+    datagen = ImageDataGenerator(
+        featurewise_center=True,
+        featurewise_std_normalization=True,
+        rotation_range=10,
+        width_shift_range=0.10,
+        height_shift_range=0.10,
+        horizontal_flip=True,
+        fill_mode='constant',
+        cval=0)
+    datagen.fit(x_train)
+
+    test_datagen = ImageDataGenerator(
+        featurewise_center=True,
+        featurewise_std_normalization=True)
+    test_datagen.fit(x_train)
+
+    return x_train, x_test, y_train, y_test
+
 def load_lsa16(data_dir, config, splits):
     """
     Load lsa16 dataset.
@@ -49,12 +86,12 @@ def load_lsa16(data_dir, config, splits):
     classes = loadedData[1]['y']
     uniqueClasses, imgsPerClass = np.unique(classes, return_counts=True)
 
-    x_train, x_test, y_train, y_test = train_test_split(features,
-                                                        classes,
-                                                        test_size=0.5,
-                                                        random_state=0,
-                                                        stratify=classes)
-    x_train, x_test = x_train / 255.0, x_test / 255.0
+    loaders = {
+        'vanilla': load_lsa16_vanilla,
+        'processed': load_lsa16_processed,
+    }
+
+    x_train, x_test, y_train, y_test = loaders[config['model.type']](features, classes)
 
     trainClasses, amountPerTrain = np.unique(y_train, return_counts=True)
     testClasses, amountPerTest = np.unique(y_test, return_counts=True)
