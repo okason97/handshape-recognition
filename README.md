@@ -1,8 +1,17 @@
 # Sign Language Recognition
 
+## Content
+
+- [Models](#models)
+  - [Prototypical Networks for Few-shot Learning](#prototypical-networks-for-few-shot-learning)
+    - [Evaluating](#evaluating)
+  - Dense Net
+- [Quickstart](#quickstart)
+- [Setup and use docker](#setup-and-use-docker)
+
 ## Models
 
-# Prototypical Networks for Few-shot Learning
+### Prototypical Networks for Few-shot Learning
 
 Tensorflow v2 implementation of NIPS 2017 Paper _Prototypical Networks for Few-shot Learning_.
 
@@ -16,9 +25,9 @@ $ ./bin/protonet --mode train --config <config>
 
 `<config> = ciarp | lsa16 | rwth`
 
-## Evaluating
+#### Evaluating
 
-To run evaluation on lsa16
+To run evaluation on a specific dataset
 
 ```sh
 $ ./bin/protonet --mode eval --config <config>
@@ -39,7 +48,7 @@ $ ./bin/start -t <tag-name>
 Build the docker image,
 
 ```sh
-$ docker build --rm -f dockerfiles/cpu-jupiter.Dockerfile -t sign-language-recognition:latest .
+$ docker build --rm -f dockerfiles/tf-py3-jupiter.Dockerfile -t sign-language-recognition:latest .
 ```
 
 and now run the image
