@@ -20,7 +20,7 @@ echo $PWD
 u_flag=""
 dockerfile=tf-py3-jupyter
 
-if [[ $sudo == "true" ]]
+if [[ $sudo == "false" ]]
 then
     u_flag="-u $(id -u):$(id -g)"
 fi
