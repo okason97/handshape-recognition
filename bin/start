@@ -22,5 +22,5 @@ dockerfile=tf-py3-jupyter
 
 [[ -v use_official ]] && dockerfile=tf-official-py3-jupyter
 
-docker build --build-arg DOCKER_ENV=$tag --rm -f dockerfiles/tf-py3-jupyter.Dockerfile -t $name:$tag . && \
+docker build --build-arg DOCKER_ENV=$tag --rm -f dockerfiles/$dockerfile.Dockerfile -t $name:$tag . && \
 docker run -v $PWD:/develop -v $PWD/results:/tf/results --rm $u_flag -p 6006:6006 -p 8888:8888 $name:$tag
