@@ -17,6 +17,7 @@ RUN git clone --branch=develop https://github.com/midusi/handshape_datasets.git 
 RUN pip3 install -e /tf/lib/handshape_datasets
 
 RUN pip3 install -e /develop/protonet-tf
+RUN pip3 install sklearn
 
 RUN mkdir -p /.handshape_datasets
 RUN chmod -R a+rwx /.handshape_datasets
