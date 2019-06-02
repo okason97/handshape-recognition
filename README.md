@@ -61,3 +61,9 @@ And then you can find the entire source code in `/develop`.
 ```sh
 $ cd /develop
 ```
+
+To run TensorBoard, use the following command (alternatively python -m tensorboard.main)
+
+```sh
+$ tensorboard --logdir=path/to/log-directory
+```
