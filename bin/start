@@ -4,14 +4,23 @@
 
 variables["-t"]="tag"
 variables["-n"]="name"
+variables["--sudo"]="sudo"
 
 . bin/scripts/flags/arguments.sh
 
 tag=${tag:-"cpu"}
 name=${name:-"sign-language-recognition"}
+sudo=${sudo:-"true"}
 
 echo "Creating $name container with tag $tag"
 echo $PWD
 
+
+if [[ sudo == "false" ]]
+then
+    flag="-u $(id -u):$(id -g)"
+else
+    flag=""
+
 docker build --build-arg DOCKER_ENV=$tag --rm -f dockerfiles/tf-py3-jupyter.Dockerfile -t $name:$tag . && \
-docker run -v $PWD:/develop -v $PWD/results:/tf/results --rm -u $(id -u):$(id -g) -p 6006:6006 -p 8888:8888 $name:$tag
+docker run -v $PWD:/develop -v $PWD/results:/tf/results --rm $flag -p 6006:6006 -p 8888:8888 $name:$tag
