@@ -40,7 +40,16 @@ def eval(config):
         loss, acc = model(support, query)
         return loss, acc
 
-    with tf.device(device_name):
+    if device_name == 'CPU:0':
+        with tf.device(device_name):
+            for i_episode in range(config['data.episodes']):
+                support, query = test_loader.get_next_episode()
+                if (i_episode+1)%50 == 0: 
+                    print("Episode: ", i_episode + 1)
+                loss, acc = calc_loss(support, query)
+                test_loss(loss)
+                test_acc(acc)
+    else:
         for i_episode in range(config['data.episodes']):
             support, query = test_loader.get_next_episode()
             if (i_episode+1)%50 == 0: 

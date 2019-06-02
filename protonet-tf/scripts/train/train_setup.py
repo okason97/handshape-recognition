@@ -136,13 +136,23 @@ def train(config):
     train_engine.hooks['on_end_episode'] = on_end_episode
 
     time_start = time.time()
-    with tf.device(device_name):
+
+    if device_name == 'CPU:0':
+        with tf.device(device_name):
+            train_engine.train(
+                loss_func=loss,
+                train_loader=train_loader,
+                val_loader=val_loader,
+                epochs=config['train.epochs'],
+                n_episodes=config['data.episodes'])
+    else:
         train_engine.train(
             loss_func=loss,
             train_loader=train_loader,
             val_loader=val_loader,
             epochs=config['train.epochs'],
             n_episodes=config['data.episodes'])
+
     time_end = time.time()
 
     elapsed = time_end - time_start
