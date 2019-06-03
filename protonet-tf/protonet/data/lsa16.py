@@ -2,8 +2,9 @@ import os
 import glob
 import numpy as np
 import tensorflow as tf
-from sklearn.model_selection import train_test_split
 import handshape_datasets as hd
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
 class DataLoader(object):
@@ -59,6 +60,23 @@ def load_lsa16(data_dir, config, splits):
     trainClasses, amountPerTrain = np.unique(y_train, return_counts=True)
     testClasses, amountPerTest = np.unique(y_test, return_counts=True)
 
+    train_datagen_args = dict(featurewise_center=True,
+                           featurewise_std_normalization=True,
+                           rotation_range=10,
+                           width_shift_range=0.10,
+                           height_shift_range=0.10,
+                           horizontal_flip=True,
+                           fill_mode='constant',
+                           cval=0)
+
+    train_datagen = ImageDataGenerator(train_datagen_args)
+    train_datagen.fit(x_train)
+
+    test_datagen_args = dict(featurewise_center=True,
+                             featurewise_std_normalization=True)
+    test_datagen = ImageDataGenerator(test_datagen_args)
+    test_datagen.fit(x_train)
+
     print('amount per class in train ds', amountPerTrain[0])
     print('amount per class in tes ds', amountPerTest[0])
 
@@ -85,14 +103,23 @@ def load_lsa16(data_dir, config, splits):
         if split in ['val', 'test']:
             y = y_test
             x = x_test
+            dg = train_datagen
+            dg_args = train_datagen_args
         else:
             y = y_train
             x = x_train
+            dg = test_datagen
+            dg_args = test_datagen_args
 
         amountPerClass = amountPerTest if split in ['val', 'test'] else amountPerTrain
 
         i = np.argsort(y)
         x = x[i, :, :, :]
+        
+        if config['model.type'] in ['processed']:
+            for index in i:
+                x[index, :, :, :] = dg.apply_transform(x[index], dg_args)
+
         data = np.reshape(x, (len(uniqueClasses), amountPerClass[0], 32, 32, 3))
 
         data_loader = DataLoader(data,

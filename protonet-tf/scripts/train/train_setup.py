@@ -5,11 +5,12 @@ accomplished during training (metrics monitor, model saving etc.)
 
 import os
 import time
+from datetime import datetime
 import numpy as np
 import tensorflow as tf
 
 tf.config.gpu.set_per_process_memory_growth(True)
-tf.debugging.set_log_device_placement(True)
+# tf.debugging.set_log_device_placement(True)
 
 from protonet.models import Prototypical
 from protonet.data import load
@@ -19,12 +20,27 @@ def train(config):
     np.random.seed(2019)
     tf.random.set_seed(2019)
 
+    model_type = config['model.type']
+    now = datetime.now()
+    now_as_str = now.strftime('%Y_%m_%d-%H:%M:%S')
+
+    data_dir = f"data/{config['data.dataset']}"
+    output_file = f"{config['data.dataset']}_{config['model.type']}_{now_as_str}.csv"
+
     # Create folder for model
-    model_dir = config['model.save_path'][:config['model.save_path'].rfind('/')]
+    model_dir = config['model.save_path'].format(model_type)[:config['model.save_path'].format(model_type).rfind('/')]
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
 
-    data_dir = f"data/{config['data.dataset']}"
+    # Create output for train process
+    results_dir = config['output.train_path']
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir)
+
+    file = open(f'{results_dir}/{output_file}', 'w') 
+    file.write("epoch, loss, accuracy, test_loss, test_accuracy\n") 
+    file.close()
+
     ret = load(data_dir, config, ['train', 'val'])
     train_loader = ret['train']
     val_loader = ret['val']
@@ -99,6 +115,15 @@ def train(config):
         epoch = state['epoch']
         template = 'Epoch {}, Loss: {}, Accuracy: {}, ' \
                    'Val Loss: {}, Val Accuracy: {}'
+
+        file = open(f'{results_dir}/{output_file}', 'a+') 
+        file.write("{}, {}, {}, {}, {}\n".format(epoch + 1,
+                                                 train_loss.result(),
+                                                 train_acc.result() * 100,
+                                                 val_loss.result(),
+                                                 val_acc.result() * 100)) 
+        file.close()
+
         print(
             template.format(epoch + 1, train_loss.result(), train_acc.result() * 100,
                             val_loss.result(),
@@ -108,7 +133,7 @@ def train(config):
         if cur_loss < state['best_val_loss']:
             print("Saving new best model with loss: ", cur_loss)
             state['best_val_loss'] = cur_loss
-            model.save(config['model.save_path'])
+            model.save(config['model.save_path'].format(model_type))
         val_losses.append(cur_loss)
 
         # Early stopping
@@ -136,6 +161,7 @@ def train(config):
     train_engine.hooks['on_end_episode'] = on_end_episode
 
     time_start = time.time()
+
     with tf.device(device_name):
         train_engine.train(
             loss_func=loss,
@@ -143,9 +169,11 @@ def train(config):
             val_loader=val_loader,
             epochs=config['train.epochs'],
             n_episodes=config['data.episodes'])
+
     time_end = time.time()
 
     elapsed = time_end - time_start
     h, min = elapsed//3600, elapsed%3600//60
     sec = elapsed-min*60
+
     print(f"Training took: {h} h {min} min {sec} sec")
