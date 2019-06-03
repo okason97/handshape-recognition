@@ -77,5 +77,5 @@ $ cd /develop
 To run TensorBoard, use the following command (alternatively python -m tensorboard.main)
 
 ```sh
-$ tensorboard --logdir=path/to/log-directory
+$ tensorboard --logdir=./notebooks/dense-net/summaries/
 ```
