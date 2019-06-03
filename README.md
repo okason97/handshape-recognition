@@ -38,10 +38,13 @@ $ ./bin/protonet --mode eval --config <config>
 ## Quickstart
 
 ```sh
-$ ./bin/start -t <tag-name>
+$ ./bin/start [-t <tag-name>] -[-sudo <bool>] [--use-official <bool>]
 ```
 
-`<tag-name> = cpu | devel-cpu | gpu`
+```
+<tag-name> = cpu | devel-cpu | gpu | nightly-gpu-py3
+<bool> = false | true
+```
 
 ## Setup and use docker
 
