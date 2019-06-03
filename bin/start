@@ -19,6 +19,7 @@ echo $PWD
 
 u_flag=""
 dockerfile=tf-py3-jupyter
+runtime=""
 
 if [[ $sudo == "false" ]]
 then
@@ -30,8 +31,14 @@ then
     dockerfile=tf-official-py3-jupyter
 fi
 
-echo $u_flag
-echo $dockerfile
+if [[ $tag == "gpu" || $use_official == "true" ]]
+then
+    runtime="--runtime=nvidia"
+fi
+
+echo "user flag: ${u_flag:-"-"}"
+echo "dockerfile: $dockerfile"
+echo "runtime: ${runtime:-"-"}"
 
 docker build --build-arg DOCKER_ENV=$tag --rm -f dockerfiles/$dockerfile.Dockerfile -t $name:$tag . && \
-docker run -v $PWD:/develop -v $PWD/results:/tf/results --rm $u_flag -p 6006:6006 -p 8888:8888 $name:$tag
+docker run -v $PWD:/develop -v $PWD/results:/tf/results --rm $u_flag -p 6006:6006 -p 8888:8888 $runtime $name:$tag
