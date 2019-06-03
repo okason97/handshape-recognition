@@ -38,7 +38,7 @@ def train(config):
         os.makedirs(results_dir)
 
     file = open(f'{results_dir}/{output_file}', 'w') 
-    file.write("") 
+    file.write("epoch, loss, accuracy, test_loss, test_accuracy\n") 
     file.close()
 
     ret = load(data_dir, config, ['train', 'val'])
