@@ -9,7 +9,7 @@ from datetime import datetime
 import numpy as np
 import tensorflow as tf
 
-tf.config.gpu.set_per_process_memory_growth(True)
+# tf.config.gpu.set_per_process_memory_growth(True)
 # tf.debugging.set_log_device_placement(True)
 
 from protonet.models import Prototypical
