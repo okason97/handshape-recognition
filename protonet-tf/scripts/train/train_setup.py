@@ -39,11 +39,11 @@ def train(config):
         os.makedirs(results_dir)
 
     file = open(f'{results_dir}/{csv_output_file}', 'w') 
-    file.write("epoch, loss, accuracy, test_loss, test_accuracy\n") 
+    file.write("epoch, loss, accuracy, val_loss, val_accuracy\n") 
     file.close()
 
     train_summary_writer = tf.summary.create_file_writer(f"{config['summary.save_path']}/train/{summary_output_file}")
-    test_summary_writer = tf.summary.create_file_writer(f"{config['summary.save_path']}/test/{summary_output_file}")
+    val_summary_writer = tf.summary.create_file_writer(f"{config['summary.save_path']}/test/{summary_output_file}")
 
     ret = load(data_dir, config, ['train', 'val'])
     train_loader = ret['train']
@@ -135,15 +135,15 @@ def train(config):
 
         with train_summary_writer.as_default():
             tf.summary.scalar('loss', train_loss.result(), step=epoch)
-            tf.summary.scalar('accuracy', train_accuracy.result(), step=epoch)
+            tf.summary.scalar('accuracy', train_acc.result(), step=epoch)
             train_loss.reset_states()           
-            train_accuracy.reset_states()        
+            train_acc.reset_states()        
 
-        with test_summary_writer.as_default():
-            tf.summary.scalar('loss', test_loss.result(), step=epoch)
-            tf.summary.scalar('accuracy', test_accuracy.result(), step=epoch)
-            test_loss.reset_states()           
-            test_accuracy.reset_states()    
+        with val_summary_writer.as_default():
+            tf.summary.scalar('loss', val_loss.result(), step=epoch)
+            tf.summary.scalar('accuracy', val_acc.result(), step=epoch)
+            val_loss.reset_states()           
+            val_acc.reset_states()    
 
         cur_loss = val_loss.result().numpy()
         if cur_loss < state['best_val_loss']:
