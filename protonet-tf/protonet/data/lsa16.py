@@ -16,7 +16,7 @@ class DataLoader(object):
         self.n_query = n_query
 
     def get_next_episode(self):
-        n_examples = 20
+        n_examples = self.data.shape[1]
         support = np.zeros([self.n_way, self.n_support, 32, 32, 3], dtype=np.float32)
         query = np.zeros([self.n_way, self.n_query, 32, 32, 3], dtype=np.float32)
         classes_ep = np.random.permutation(self.n_classes)[:self.n_way]
@@ -52,7 +52,7 @@ def load_lsa16(data_dir, config, splits):
 
     x_train, x_test, y_train, y_test = train_test_split(features,
                                                         classes,
-                                                        test_size=0.5,
+                                                        test_size=0.3,
                                                         random_state=0,
                                                         stratify=classes)
     x_train, x_test = x_train / 255.0, x_test / 255.0
@@ -76,9 +76,6 @@ def load_lsa16(data_dir, config, splits):
                              featurewise_std_normalization=True)
     test_datagen = ImageDataGenerator(test_datagen_args)
     test_datagen.fit(x_train)
-
-    print('amount per class in train ds', amountPerTrain[0])
-    print('amount per class in tes ds', amountPerTest[0])
 
     ret = {}
     for split in splits:
