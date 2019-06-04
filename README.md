@@ -5,6 +5,7 @@
 - [Models](#models)
   - [Prototypical Networks for Few-shot Learning](#prototypical-networks-for-few-shot-learning)
     - [Evaluating](#evaluating)
+    - [Results](#results)
   - Dense Net
 - [Quickstart](#quickstart)
 - [Setup and use docker](#setup-and-use-docker)
@@ -33,7 +34,27 @@ To run evaluation on a specific dataset
 $ ./bin/protonet --mode eval --config <config>
 ```
 
-`<config> = ciarp | lsa16 | rwth`
+`<config> = ciarp | lsa16 | rwth, ciarp & rwth not working yet`
+
+#### Results
+
+In the `protonet-tf/results/<ds>` directory you can find the following results of training processes on a specific dataset `<ds>`:
+
+-  `protonet-tf/results/<ds>/models/`, there are trained models.
+
+-  `protonet-tf/results/<ds>/results/`, there are debug output on different `.csv` files.
+
+-  `protonet-tf/results/<ds>/summaries/`, tensorboard summaries.
+
+To run TensorBoard, use the following command 
+
+```sh
+$ tensorboard --logdir=./protonet-tf/results/<ds>/summaries/
+```
+
+### Dense Net
+
+. . .
 
 ## Quickstart
 
