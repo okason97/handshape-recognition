@@ -134,6 +134,19 @@ def train(config):
                               val_loss.result(),
                               val_acc.result() * 100))
 
+        cur_loss = val_loss.result().numpy()
+        if cur_loss < state['best_val_loss']:
+            print("Saving new best model with loss: {}".format(cur_loss))
+            state['best_val_loss'] = cur_loss
+            model.save(config['model.save_path'].format(model_type))
+        val_losses.append(cur_loss)
+
+        # Early stopping
+        patience = config['train.patience']
+        if len(val_losses) > patience \
+                and max(val_losses[-patience:]) == val_losses[-1]:
+            state['early_stopping_triggered'] = True
+
         with train_summary_writer.as_default():
             tf.summary.scalar('loss', train_loss.result(), step=epoch)
             tf.summary.scalar('accuracy', train_acc.result(), step=epoch)
@@ -143,23 +156,8 @@ def train(config):
         with val_summary_writer.as_default():
             tf.summary.scalar('loss', val_loss.result(), step=epoch)
             tf.summary.scalar('accuracy', val_acc.result(), step=epoch)
-            val_loss.reset_states()           
-            val_acc.reset_states() 
-
-        if epoch > 1:
-            cur_loss = val_loss.result().numpy()
-            if cur_loss < state['best_val_loss']:
-                print(cur_loss)
-                print("Saving new best model with loss: ", cur_loss)
-                state['best_val_loss'] = cur_loss
-                model.save(config['model.save_path'].format(model_type))
-            val_losses.append(cur_loss)
-
-            # Early stopping
-            patience = config['train.patience']
-            if len(val_losses) > patience \
-                    and max(val_losses[-patience:]) == val_losses[-1]:
-                state['early_stopping_triggered'] = True
+            val_loss.reset_states()          
+            val_acc.reset_states()
 
     train_engine.hooks['on_end_epoch'] = on_end_epoch
 
