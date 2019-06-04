@@ -149,7 +149,7 @@ def train(config):
         if cur_loss < state['best_val_loss']:
             print("Saving new best model with loss: ", cur_loss)
             state['best_val_loss'] = cur_loss
-            model.save(config['model.save_path'].format(model_type, state['epoch']))
+            model.save(config['model.save_path'].format(model_type))
         val_losses.append(cur_loss)
 
         # Early stopping
