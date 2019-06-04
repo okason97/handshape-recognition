@@ -25,7 +25,8 @@ def train(config):
     now_as_str = now.strftime('%Y_%m_%d-%H:%M:%S')
 
     data_dir = f"data/{config['data.dataset']}"
-    output_file = f"{config['data.dataset']}_{config['model.type']}_{now_as_str}.csv"
+    csv_output_file = f"{config['data.dataset']}_{config['model.type']}_{now_as_str}.csv"
+    summary_output_file = f"{config['data.dataset']}_{config['model.type']}_{now_as_str}"
 
     # Create folder for model
     model_dir = config['model.save_path'].format(model_type)[:config['model.save_path'].format(model_type).rfind('/')]
@@ -37,9 +38,12 @@ def train(config):
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
 
-    file = open(f'{results_dir}/{output_file}', 'w') 
+    file = open(f'{results_dir}/{csv_output_file}', 'w') 
     file.write("epoch, loss, accuracy, test_loss, test_accuracy\n") 
     file.close()
+
+    train_summary_writer = tf.summary.create_file_writer(f"{config['summary.save_path']}/train/{summary_output_file}")
+    test_summary_writer = tf.summary.create_file_writer(f"{config['summary.save_path']}/test/{summary_output_file}")
 
     ret = load(data_dir, config, ['train', 'val'])
     train_loader = ret['train']
@@ -116,7 +120,7 @@ def train(config):
         template = 'Epoch {}, Loss: {}, Accuracy: {}, ' \
                    'Val Loss: {}, Val Accuracy: {}'
 
-        file = open(f'{results_dir}/{output_file}', 'a+') 
+        file = open(f'{results_dir}/{csv_output_file}', 'a+') 
         file.write("{}, {}, {}, {}, {}\n".format(epoch + 1,
                                                  train_loss.result(),
                                                  train_acc.result() * 100,
@@ -128,6 +132,18 @@ def train(config):
             template.format(epoch + 1, train_loss.result(), train_acc.result() * 100,
                             val_loss.result(),
                             val_acc.result() * 100))
+
+        with train_summary_writer.as_default():
+            tf.summary.scalar('loss', train_loss.result(), step=epoch)
+            tf.summary.scalar('accuracy', train_accuracy.result(), step=epoch)
+            train_loss.reset_states()           
+            train_accuracy.reset_states()        
+
+        with test_summary_writer.as_default():
+            tf.summary.scalar('loss', test_loss.result(), step=epoch)
+            tf.summary.scalar('accuracy', test_accuracy.result(), step=epoch)
+            test_loss.reset_states()           
+            test_accuracy.reset_states()    
 
         cur_loss = val_loss.result().numpy()
         if cur_loss < state['best_val_loss']:
