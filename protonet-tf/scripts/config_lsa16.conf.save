@@ -4,15 +4,15 @@
     # Name of the splitting
     data.split =
     # Number of classes in train
-    data.train_way = 18
+    data.train_way = 17
     # Number of support examples
     data.train_support = 5
     # Number of query examples
-    data.train_query = 5
+    data.train_query = 15
     # Number of classes in validation
     data.test_way = 5
     # Number of support examples in validation
-    data.test_support = 15
+    data.test_support = 5
      # Number query examples in validation
     data.test_query = 5
     # Number of episodes in one epoch
@@ -29,8 +29,7 @@
     # Path to the saved model
     model.save_path = ./protonet-tf/results/lsa16/models/lsa16_{}.h5
     # <type> = vanilla | processed
-    model.type = processed
-
+    model.type = vanilla
     # Flag to write output to file
     output.write = 1
     # Path to debug info
@@ -62,5 +61,5 @@
     # model
     model.x_dim = 32,32,3
     model.save_path = ./protonet-tf/results/lsa16/models/lsa16_{}.h5
-    model.type = processed
+    model.type = vanilla
     
