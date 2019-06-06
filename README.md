@@ -59,7 +59,7 @@ $ tensorboard --logdir=./protonet-tf/results/<ds>/summaries/
 ## Quickstart
 
 ```sh
-$ ./bin/start [-t <tag-name>] -[-sudo <bool>] [--use-official <bool>]
+$ ./bin/start [-t <tag-name>] [--sudo <bool>] [--use-official <bool>]
 ```
 
 ```
