@@ -5,7 +5,6 @@
 variables["-t"]="tag"
 variables["-n"]="name"
 variables["--sudo"]="sudo"
-variables["--use-official"]="use_official"
 
 . ./scripts/flags/arguments.sh
 
