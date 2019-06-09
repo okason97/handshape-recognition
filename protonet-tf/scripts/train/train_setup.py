@@ -13,8 +13,8 @@ import tensorflow as tf
 # tf.debugging.set_log_device_placement(True)
 
 from protonet.models import Prototypical
-from protonet.data import load
 from protonet import TrainEngine
+from datasets import load
 
 def train(config):
     np.random.seed(2019)

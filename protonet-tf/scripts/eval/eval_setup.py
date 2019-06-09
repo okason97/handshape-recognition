@@ -8,7 +8,7 @@ import tensorflow as tf
 # tf.debugging.set_log_device_placement(True)
 
 from protonet.models import Prototypical
-from protonet.data import load
+from datasets import load
 
 
 def eval(config):

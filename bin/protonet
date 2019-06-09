@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-. bin/scripts/flags/declares.sh
+. ./scripts/flags/declares.sh
 
 variables["--mode"]="mode"
 variables["--config"]="config"
 
-. bin/scripts/flags/arguments.sh
+. ./scripts/flags/arguments.sh
 
 mode=${mode:-"train"}
 config=${config:-"lsa16"}

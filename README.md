@@ -59,11 +59,11 @@ $ tensorboard --logdir=./protonet-tf/results/<ds>/summaries/
 ## Quickstart
 
 ```sh
-$ ./bin/start [-t <tag-name>] [--sudo <bool>] [--use-official <bool>]
+$ ./bin/start [-t <tag-name>] [--sudo <bool>]
 ```
 
 ```
-<tag-name> = cpu | devel-cpu | gpu | nightly-gpu-py3
+<tag-name> = cpu | devel-cpu | gpu
 <bool> = false | true
 ```
 
