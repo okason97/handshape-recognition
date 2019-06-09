@@ -50,16 +50,14 @@ def load_rwth(data_dir, config, splits):
     classes = loadedData[1]['y']
     uniqueClasses, imgsPerClass = np.unique(classes, return_counts=True)
 
-    for c in imgsPerClass:
-        print(c)
-
     x_train, x_test, y_train, y_test = train_test_split(features,
                                                         classes,
                                                         test_size=0.33,
                                                         random_state=42)
     x_train, x_test = x_train / 255.0, x_test / 255.0
 
-    print(amountPerTest, amountPerTrain)
+    trainClasses, amountPerTrain = np.unique(y_train, return_counts=True)
+    testClasses, amountPerTest = np.unique(y_test, return_counts=True)
 
     if config['model.type'] in ['processed']:
         train_datagen_args = {
