@@ -2,7 +2,7 @@ import setuptools
 from setuptools import setup
 
 
-setup(name='protonet',
+setup(name='datasets',
       version='0.0.1',
       license='MIT',
       packages=setuptools.find_packages(),
