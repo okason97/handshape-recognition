@@ -55,9 +55,8 @@ def load_rwth(data_dir, config, splits):
 
     x_train, x_test, y_train, y_test = train_test_split(features,
                                                         classes,
-                                                        test_size=0.3,
-                                                        random_state=0,
-                                                        stratify=classes)
+                                                        test_size=0.33,
+                                                        random_state=42)
     x_train, x_test = x_train / 255.0, x_test / 255.0
 
     print(amountPerTest, amountPerTrain)
