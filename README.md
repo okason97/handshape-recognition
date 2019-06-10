@@ -1,4 +1,4 @@
-# Sign Language Recognition
+# Handshape Recognition
 
 ## Content
 
@@ -54,7 +54,7 @@ $ tensorboard --logdir=./protonet-tf/results/<ds>/summaries/
 
 ### Dense Net
 
-. . .
+Same as `protonet-tf`, but with folder`notebooks/dense-net/summaries/`
 
 ## Quickstart
 
