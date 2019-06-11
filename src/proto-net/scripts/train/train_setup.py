@@ -87,10 +87,10 @@ def train(config):
     optimizer = tf.keras.optimizers.Adam(config['train.lr'])
 
     # Metrics to gather
-    train_loss = tf.metrics.Mean(name='train_loss')
-    val_loss = tf.metrics.Mean(name='val_loss')
-    train_acc = tf.metrics.Mean(name='train_accuracy')
-    val_acc = tf.metrics.Mean(name='val_accuracy')
+    train_loss = tf.keras.metrics.Mean(name='train_loss')
+    val_loss = tf.keras.metrics.Mean(name='val_loss')
+    train_acc = tf.keras.metrics.Mean(name='train_accuracy')
+    val_acc = tf.keras.metrics.Mean(name='val_accuracy')
 
     # Val losses for patience
     val_losses = []
