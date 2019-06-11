@@ -146,7 +146,7 @@ def train(config):
         template = 'Epoch {}, Loss: {}, Accuracy: {}, ' \
                    'Val Loss: {}, Val Accuracy: {}'
 
-        file = open(f'{results_dir}/{csv_output_file}', 'a+') 
+        file = open(csv_output_file, 'a+') 
         file.write("{}, {}, {}, {}, {}\n".format(epoch + 1,
                                                  train_loss.result(),
                                                  train_acc.result() * 100,
