@@ -64,6 +64,21 @@ def train(config):
     train_summary_writer = tf.summary.create_file_writer(train_summary_file)
     val_summary_writer = tf.summary.create_file_writer(test_summary_file)
 
+    # create map file if not exists
+    if not os.path.exists(csv_output_file):
+        file = open(csv_output_file, 'w')
+        file.write("datetime,config,trained_model,result,summary_train,summary_test\n")
+        file.close()
+
+    file = open(csv_output_map_file, 'a+') 
+    file.write("{},{},{},{},{},{}\n".format(now_as_str,
+                                            config_file,
+                                            model_file,
+                                            csv_output_file,
+                                            train_summary_file,
+                                            test_summary_file))
+    file.close()
+
     # Data loader
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
@@ -219,19 +234,5 @@ def train(config):
     elapsed = time_end - time_start
     h, min = elapsed//3600, elapsed%3600//60
     sec = elapsed-min*60
-
-    if not os.path.exists(csv_output_file):
-        file = open(csv_output_file, 'w')
-        file.write("datetime,config,trained_model,result,summary_train,summary_test\n")
-        file.close()
-
-    file = open(csv_output_map_file, 'a+') 
-    file.write("{},{},{},{},{},{}\n".format(now_as_str,
-                                            config_file,
-                                            model_file,
-                                            csv_output_file,
-                                            train_summary_file,
-                                            test_summary_file))
-    file.close()
 
     print(f"Training took: {h} h {min} min {sec} sec")
