@@ -5,6 +5,7 @@ accomplished during training (metrics monitor, model saving etc.)
 
 import os
 import time
+import json
 from datetime import datetime
 import numpy as np
 import tensorflow as tf
@@ -20,30 +21,52 @@ def train(config):
     np.random.seed(2019)
     tf.random.set_seed(2019)
 
+    # Useful data
     model_type = config['model.type']
     now = datetime.now()
     now_as_str = now.strftime('%Y_%m_%d-%H:%M:%S')
 
+    # Output files
+    model_file = f"{config['model.save_path'].format(model_type, now_as_str)}"
+    config_file = f"{config['output.config_path'].format(model_type, now_as_str)}"
+    csv_output_file = f"{config['output.train_path'].format(model_type, now_as_str)}"
+    train_summary_file = f"{config['summary.save_path'].format('train', model_type, now_as_str)}"
+    test_summary_file = f"{config['summary.save_path'].format('test', model_type, now_as_str)}"
+    csv_output_map_file = f"results/{config['data.dataset']}/proto-net/{config['data.dataset']}_protonet_results.csv"
+
+    # Output dirs
     data_dir = f"data/{config['data.dataset']}"
-    csv_output_file = f"{config['data.dataset']}_{config['model.type']}_{now_as_str}.csv"
-    summary_output_file = f"{config['data.dataset']}_{config['model.type']}_{now_as_str}"
+    model_dir = model_file[:model_file.rfind('/')]
+    config_dir = config_file[:config_file.rfind('/')]
+    results_dir = csv_output_file[:csv_output_file.rfind('/')]
 
     # Create folder for model
-    model_dir = config['model.save_path'].format(model_type)[:config['model.save_path'].format(model_type).rfind('/')]
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
 
+    # Create folder for config
+    if not os.path.exists(config_dir):
+        os.makedirs(config_dir)
+
     # Create output for train process
-    results_dir = config['output.train_path']
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
 
-    file = open(f'{results_dir}/{csv_output_file}', 'w') 
-    file.write("epoch, loss, accuracy, val_loss, val_accuracy\n") 
+    # generate config file
+    file = open(config_file, 'w')
+    file.write(json.dumps(config, indent=2))
     file.close()
 
-    train_summary_writer = tf.summary.create_file_writer(f"{config['summary.save_path']}/train/{summary_output_file}")
-    val_summary_writer = tf.summary.create_file_writer(f"{config['summary.save_path']}/test/{summary_output_file}")
+    file = open(f"{csv_output_file}", 'w') 
+    file.write("epoch, loss, accuracy, val_loss, val_accuracy\n")
+    file.close()
+
+    train_summary_writer = tf.summary.create_file_writer(train_summary_file)
+    val_summary_writer = tf.summary.create_file_writer(test_summary_file)
+
+    # Data loader
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
 
     ret = load(data_dir, config, ['train', 'val'])
     train_loader = ret['train']
@@ -68,6 +91,8 @@ def train(config):
     val_loss = tf.metrics.Mean(name='val_loss')
     train_acc = tf.metrics.Mean(name='train_accuracy')
     val_acc = tf.metrics.Mean(name='val_accuracy')
+
+    # Val losses for patience
     val_losses = []
 
     @tf.function
@@ -95,6 +120,7 @@ def train(config):
         val_acc(acc)
 
     # Create empty training engine
+    # FIXME: use keras model.fit
     train_engine = TrainEngine()
 
     # Set hooks on training engine
@@ -138,7 +164,7 @@ def train(config):
         if cur_loss < state['best_val_loss']:
             print("Saving new best model with loss: {}".format(cur_loss))
             state['best_val_loss'] = cur_loss
-            model.save(config['model.save_path'].format(model_type))
+            model.save(model_file)
         val_losses.append(cur_loss)
 
         # Early stopping
@@ -193,5 +219,19 @@ def train(config):
     elapsed = time_end - time_start
     h, min = elapsed//3600, elapsed%3600//60
     sec = elapsed-min*60
+
+    if not os.path.exists(csv_output_file):
+        file = open(csv_output_file, 'w')
+        file.write("datetime,config,trained_model,result,summary_train,summary_test\n")
+        file.close()
+
+    file = open(csv_output_map_file, 'a+') 
+    file.write("{},{},{},{},{},{}\n".format(now_as_str,
+                                            config_file,
+                                            model_file,
+                                            csv_output_file,
+                                            train_summary_file,
+                                            test_summary_file))
+    file.close()
 
     print(f"Training took: {h} h {min} min {sec} sec")

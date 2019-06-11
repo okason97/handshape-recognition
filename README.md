@@ -2,59 +2,46 @@
 
 ## Content
 
+- [Results](#results)
+- [Quickstart](#quickstart)
+- [Setup and use docker](#setup-and-use-docker)
 - [Models](#models)
   - [Prototypical Networks for Few-shot Learning](#prototypical-networks-for-few-shot-learning)
     - [Evaluating](#evaluating)
-    - [Results](#results)
-  - Dense Net
-- [Quickstart](#quickstart)
-- [Setup and use docker](#setup-and-use-docker)
+  - [Dense Net](#dense-net)
 
-## Models
+## Results
 
-### Prototypical Networks for Few-shot Learning
+In the `/results` directory you can find the results of a training processes using a `<model>` on a specific `<dataset>`:
 
-Tensorflow v2 implementation of NIPS 2017 Paper _Prototypical Networks for Few-shot Learning_.
-
-Implementation based on [protonet](https://github.com/ulises-jeremias/prototypical-networks-tf).
-
-Run the following command to run training on `<config>` with default parameters.
-
-```sh
-$ ./bin/protonet --mode train --config <config>
+```
+.
+├─ . . .
+├─ results
+│  ├─ <dataset>                            # results for an specific dataset.
+│  │  ├─ <model>                           # results training a <model> on a <dataset>.
+│  │  │  ├─ models                         # ".h5" files for trained models.
+│  │  │  ├─ results                        # ".csv" files with the different metrics for each training period.
+│  │  │  ├─ summaries                      # tensorboard summaries.
+│  │  │  ├─ config                         # optional configuration files.
+│  └─ └─ └─ <dataset>_<model>_results.csv  # ".csv" file in which the relationships between configurations, models, results and summaries are listed by date.
+└─ . . .
 ```
 
-`<config> = ciarp | lsa16 | rwth`
+where
 
-#### Evaluating
-
-To run evaluation on a specific dataset
-
-```sh
-$ ./bin/protonet --mode eval --config <config>
+```
+<dataset> = lsa16 | rwth | . . .
+<model> = dense-net | proto-net
 ```
 
-`<config> = ciarp | lsa16 | rwth, ciarp & rwth not working yet`
-
-#### Results
-
-In the `protonet-tf/results/<ds>` directory you can find the following results of training processes on a specific dataset `<ds>`:
-
--  `protonet-tf/results/<ds>/models/`, there are trained models.
-
--  `protonet-tf/results/<ds>/results/`, there are debug output on different `.csv` files.
-
--  `protonet-tf/results/<ds>/summaries/`, tensorboard summaries.
-
-To run TensorBoard, use the following command 
+To run TensorBoard, use the following command:
 
 ```sh
-$ tensorboard --logdir=./protonet-tf/results/<ds>/summaries/
+$ tensorboard --logdir=./results/<dataset>/<model>/summaries
 ```
 
-### Dense Net
-
-Same as `protonet-tf`, but with folder`notebooks/dense-net/summaries/`
+* * *
 
 ## Quickstart
 
@@ -100,3 +87,33 @@ To run TensorBoard, use the following command (alternatively python -m tensorboa
 ```sh
 $ tensorboard --logdir=/path/to/summaries
 ```
+
+## Models
+
+### Prototypical Networks for Few-shot Learning
+
+Tensorflow v2 implementation of NIPS 2017 Paper _Prototypical Networks for Few-shot Learning_.
+
+Implementation based on [protonet](https://github.com/ulises-jeremias/prototypical-networks-tf).
+
+Run the following command to run training on `<config>` with default parameters.
+
+```sh
+$ ./bin/protonet --mode train --config <config>
+```
+
+`<config> = lsa16 | rwth`
+
+#### Evaluating
+
+To run evaluation on a specific dataset
+
+```sh
+$ ./bin/protonet --mode eval --config <config>
+```
+
+`<config> = lsa16 | rwth, rwth not working yet`
+
+### Dense Net
+
+. . .
