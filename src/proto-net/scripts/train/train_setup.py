@@ -67,7 +67,7 @@ def train(config):
     # create map file if not exists
     if not os.path.exists(csv_output_file):
         file = open(csv_output_file, 'w')
-        file.write("datetime,config,trained_model,result,summary_train,summary_test\n")
+        file.write("datetime,config,trained_model,result,train_summary,test_summary\n")
         file.close()
 
     file = open(csv_output_map_file, 'a+') 
