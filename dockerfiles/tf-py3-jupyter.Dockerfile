@@ -24,7 +24,7 @@ RUN pip3 install -e /tf/lib/prototypical-networks-tf
 
 RUN pip3 install -e /develop/src/proto-net
 RUN pip3 install sklearn
-RUN if [[ DOCKER_ENV == "gpu" ]]; then pip3 install tf-nightly-gpu-2.0-preview; fi
+RUN if [[ DOCKER_ENV == "gpu" ]]; then pip3 install -q -U tf-nightly-gpu-2.0-preview tb-nightly; fi
 
 # Default dir for handshape datasets lib - use /data instead
 RUN mkdir -p /.handshape_datasets
