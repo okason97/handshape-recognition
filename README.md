@@ -59,13 +59,13 @@ $ ./bin/start [-t <tag-name>] [--sudo <bool>]
 Build the docker image,
 
 ```sh
-$ docker build --rm -f dockerfiles/tf-py3-jupiter.Dockerfile -t sign-language-recognition:latest .
+$ docker build --rm -f dockerfiles/tf-py3-jupiter.Dockerfile -t handshape-recognition:latest .
 ```
 
 and now run the image
 
 ```sh
-$ docker run --rm -u $(id -u):$(id -g) -p 6006:6006 -p 8888:8888 sign-language-recognition:latest
+$ docker run --rm -u $(id -u):$(id -g) -p 6006:6006 -p 8888:8888 handshape-recognition:latest
 ```
 
 Visit that link, hey look your jupyter notebooks are ready to be created.
