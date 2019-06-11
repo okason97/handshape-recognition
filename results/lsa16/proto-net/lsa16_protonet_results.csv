@@ -1,1 +1,2 @@
+datetime,config,trained_model,result,summary_train,summary_test
 2019_06_11-08:25:29,./results/lsa16/proto-net/config/lsa16_proto-net_processed_2019_06_11-08:25:29.json,./results/lsa16/proto-net/models/lsa16_proto-net_processed_2019_06_11-08:25:29.h5,./results/lsa16/proto-net/results/lsa16_proto-net_processed_2019_06_11-08:25:29.csv,./results/lsa16/proto-net/summaries/train/lsa16_proto-net_processed_2019_06_11-08:25:29,./results/lsa16/proto-net/summaries/test/lsa16_proto-net_processed_2019_06_11-08:25:29
