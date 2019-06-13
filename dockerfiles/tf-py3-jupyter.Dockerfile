@@ -23,7 +23,7 @@ RUN git clone https://github.com/ulises-jeremias/prototypical-networks-tf.git /t
 RUN pip3 install -e /tf/lib/prototypical-networks-tf
 
 RUN pip3 install -e /develop/src/proto-net
-RUN pip3 install sklearn
+RUN pip3 install sklearn opencv-python IPython
 RUN if [[ DOCKER_ENV == "gpu" ]]; then pip3 install -q -U tf-nightly-gpu-2.0-preview tb-nightly; fi
 
 # Default dir for handshape datasets lib - use /data instead
