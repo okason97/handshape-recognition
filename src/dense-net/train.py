@@ -1,53 +1,41 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[13]:
-
-
 import tensorflow as tf
+
+import os, sys, getopt
+import json
+from datetime import datetime
 
 import numpy as np
 from tensorflow.keras.layers import Input, ZeroPadding2D, Dense, Dropout, Activation, Convolution2D, Reshape
 from tensorflow.keras.layers import AveragePooling2D, GlobalAveragePooling2D, MaxPooling2D, BatchNormalization
-
 from tensorflow.keras import Model
 from tensorflow.keras.utils import to_categorical
-
 from tensorflow.keras.layers import Layer, InputSpec
 from tensorflow.keras import initializers
-import tensorflow.keras.backend as K
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-
-import os, sys, getopt
-
-import json
-
-from datetime import datetime
+from sklearn.model_selection import train_test_split
+import tensorflow.keras.backend as K
 
 import handshape_datasets as hd
-
-from sklearn.model_selection import train_test_split
-
 from densenet import densenet_model
 
 print(tf.__version__)
-
-
-# In[14]:
 
 argv = sys.argv
 
 # hyperparameters
 # data
 dataset_name = "rwth"
-rotation_range=10
-width_shift_range=0.10
-height_shift_range=0.10
-horizontal_flip=True
+rotation_range = 10
+width_shift_range = 0.10
+height_shift_range = 0.10
+horizontal_flip = True
 
 # model
-growth_rate=128
-nb_layers=[6,12]
+growth_rate = 128
+nb_layers = [6,12]
 
 # training
 lr = 0.001
@@ -55,20 +43,39 @@ epochs = 400
 max_patience = 25
 
 # log
+checkpoints = False
 log_freq = 1
 save_freq = 40
 models_directory = 'models/'
 results_directory = 'results/'
 config_directory = 'config/'
 
+
 try:
-    opts, args = getopt.getopt(argv,"h",["dataset=","rotation=","w-shift=","h-shift=","h-flip=","growth-r=","nb-layers=","lr=","epochs=","patience=","log-freq=","save-freq=","models-dir=","results_dir="])
+    opts, args = getopt.getopt(argv, "h", [
+        "dataset=",
+        "rotation=",
+        "w-shift=",
+        "h-shift=",
+        "h-flip=",
+        "growth-r=",
+        "nb-layers=",
+        "lr=",
+        "epochs=",
+        "patience=",
+        "log-freq=",
+        "save-freq=",
+        "models-dir=",
+        "results_dir="
+        "checkpoints="
+    ])
 except getopt.GetoptError:
-    print('test.py --dataset=rwth --rotation=10 --w-shift=0.1 --h-shift=0.1 h-flip=True growth-r=128 nb-layers=6:12 lr=0.001 epochs=400 patience=25 log-freq=1 save-freq=40 models-dir=models results_dir=results')
+    print('test.py --dataset=rwth --rotation=10 --w-shift=0.1 --h-shift=0.1 h-flip=True growth-r=128 nb-layers=6:12 lr=0.001 epochs=400 patience=25 log-freq=1 save-freq=40 models-dir=models results_dir=results checkpoints=True')
     sys.exit(2)
+
 for opt, arg in opts:
     if opt == '-h':
-        print('test.py --dataset=rwth --rotation=10 --w-shift=0.1 --h-shift=0.1 h-flip=True growth-r=128 nb-layers=6:12 lr=0.001 epochs=400 patience=25 log-freq=1 save-freq=40 models-dir=models results_dir=results')
+        print('test.py --dataset=rwth --rotation=10 --w-shift=0.1 --h-shift=0.1 h-flip=True growth-r=128 nb-layers=6:12 lr=0.001 epochs=400 patience=25 log-freq=1 save-freq=40 models-dir=models results_dir=results checkpoints=True')
         sys.exit()
     elif opt == "--dataset":
         dataset_name = arg
@@ -101,36 +108,35 @@ for opt, arg in opts:
         models_directory = arg
     elif opt == "--results_dir":
         results_directory = arg
+    elif opt == "checkpoints":
+        checkpoints = arg
 
-general_directory = "/results/"
-save_directory = general_directory + "{}/densenet/".format(dataset_name)
+general_directory = "/develop/results/"
+save_directory = general_directory + "{}/dense-net/".format(dataset_name)
 results = 'epoch,loss,accuracy,test_loss,test_accuracy\n'
+
 date = datetime.now().strftime("%Y_%m_%d-%H:%M:%S")
 identifier = "{}-growth-{}-densenet-{}".format(
-    '-'.join([str(i) for i in nb_layers] ), 
+    '-'.join([str(i) for i in nb_layers]),
     growth_rate, 
     dataset_name) + date
+
 csv_output_map_file = save_directory + dataset_name + "_densenet.csv"
 summary_file = save_directory + 'summary.csv'
+
 print("hyperparameters set")
-
-# In[2]:
-
-
 print(tf.test.is_gpu_available())
 
+DATASET_PATH = '/develop/data/{}/data'.format(dataset_name)
 
-# In[3]:
+if not os.path.exists(DATASET_PATH):
+    os.makedirs(DATASET_PATH)
 
-
-data = hd.load(dataset_name)
-
-
-# In[4]:
-
+data = hd.load(dataset_name, DATASET_PATH)
 
 features = data[0]
 labels = data[1]['y']
+
 n_classes = len(np.unique(labels))
 image_shape = np.shape(data[0])[1:]
 
@@ -140,15 +146,7 @@ x_train, x_test, y_train, y_test = train_test_split(features,
                                                     random_state=42)
 x_train, x_test = x_train / 255.0, x_test / 255.0
 
-
-# In[5]:
-
-
 print("data loaded")
-
-
-# In[6]:
-
 
 datagen = ImageDataGenerator(
     featurewise_center=True,
@@ -168,35 +166,18 @@ test_datagen = ImageDataGenerator(
     cval=0)
 test_datagen.fit(x_train)
 
-
-# In[7]:
-
-
 model = densenet_model(classes=n_classes, shape=image_shape, growth_rate=growth_rate, nb_layers=nb_layers)
 
 print("model created")
 
-
-# In[8]:
-
-
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
-
 optimizer = tf.keras.optimizers.Adam()
-
-
-# In[9]:
-
 
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
 
 test_loss = tf.keras.metrics.Mean(name='test_loss')
 test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
-
-
-# In[10]:
-
 
 @tf.function
 def train_step(images, labels):
@@ -209,10 +190,6 @@ def train_step(images, labels):
     train_loss(loss)
     train_accuracy(labels, predictions)
 
-
-# In[11]:
-
-
 @tf.function
 def test_step(images, labels):
     predictions = model(tf.cast(images, tf.float32), training=False)
@@ -220,10 +197,6 @@ def test_step(images, labels):
 
     test_loss(t_loss)
     test_accuracy(labels, predictions)
-
-
-# In[12]:
-
 
 # create summary writers
 train_summary_writer = tf.summary.create_file_writer(save_directory + 'summaries/train/' + identifier)
@@ -238,8 +211,8 @@ print("starting training")
 min_loss = 100
 min_loss_acc = 0
 patience = 0
-for epoch in range(epochs):
 
+for epoch in range(epochs):
     batches = 0
     for images, labels in train_gen:
         train_step(images, labels)
@@ -291,9 +264,9 @@ for epoch in range(epochs):
             tf.summary.scalar('loss', test_loss.result(), step=epoch)
             tf.summary.scalar('accuracy', test_accuracy.result(), step=epoch)
             test_loss.reset_states()           
-            test_accuracy.reset_states()           
+            test_accuracy.reset_states()   
             
-    if (epoch % save_freq == 0):
+    if checkpoints and epoch % save_freq == 0:
         if not os.path.exists(save_directory + models_directory):
             os.makedirs(save_directory + models_directory)
         # serialize weights to HDF5
@@ -301,6 +274,7 @@ for epoch in range(epochs):
         
     if patience >= max_patience:
         break
+
 if not os.path.exists(save_directory + results_directory):
     os.makedirs(save_directory + results_directory)
 file = open(save_directory + results_directory + 'results-'+ identifier + '.csv','w') 
@@ -309,6 +283,7 @@ file.close()
 
 if not os.path.exists(save_directory + config_directory):
     os.makedirs(save_directory + config_directory)
+
 config = {
     'data.dataset_name': dataset_name, 
     'data.rotation_range': rotation_range, 
@@ -321,11 +296,13 @@ config = {
     'train.epochs': epochs, 
     'train.max_patience': max_patience, 
 }
-with open(save_directory + config_directory + '.json', 'w') as json_file:
-  json.dump(config, json_file)
 
-file = open(summary_file,'a+') 
-summary = "{}, {}, densenet, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
+with open(save_directory + config_directory + '.json', 'w') as json_file:
+    json.dump(config, json_file)
+
+file = open(summary_file, 'a+') 
+summary = "{}, {}, dense-net, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
     date, dataset_name, save_directory + config_directory, min_loss, min_loss_acc)
-file.write(summary) 
+file.write(summary)
+
 file.close()
