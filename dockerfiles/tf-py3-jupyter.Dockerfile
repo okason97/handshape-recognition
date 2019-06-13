@@ -9,6 +9,7 @@ COPY src /tf/notebooks
 SHELL ["/bin/bash", "-c"]
 
 RUN apt-get update -q
+RUN apt-get install -y libsm6 libxext6 libxrender-dev
 RUN apt-get install -y git nano
 
 RUN apt-get clean
