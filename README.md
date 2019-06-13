@@ -46,12 +46,11 @@ $ tensorboard --logdir=./results/<dataset>/<model>/summaries
 ## Quickstart
 
 ```sh
-$ ./bin/start [-t <tag-name>] [--sudo <bool>]
+$ ./bin/start [-t <tag-name>] [--sudo] [--build]
 ```
 
 ```
 <tag-name> = cpu | devel-cpu | gpu
-<bool> = false | true
 ```
 
 ## Setup and use docker
