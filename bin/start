@@ -50,4 +50,5 @@ docker run \
     -v $PWD:/develop \
     -v $PWD/results:/tf/results \
     -v $PWD/data:/tf/data \
+    -v $PWD/src:/tf/notebooks \
     --rm $u_flag -p 6006:6006 -p 8888:8888 $runtime $name:$tag
