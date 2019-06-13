@@ -46,7 +46,7 @@ $ tensorboard --logdir=./results/<dataset>/<model>/summaries
 ## Quickstart
 
 ```sh
-$ ./bin/start [-t <tag-name>] [--sudo] [--build]
+$ ./bin/start [-n <string>] [-t <tag-name>] [--sudo] [--build]
 ```
 
 ```
