@@ -8,17 +8,12 @@ import json
 from datetime import datetime
 
 import numpy as np
-from tensorflow.keras.layers import Input, ZeroPadding2D, Dense, Dropout, Activation, Convolution2D, Reshape
-from tensorflow.keras.layers import AveragePooling2D, GlobalAveragePooling2D, MaxPooling2D, BatchNormalization
-from tensorflow.keras import Model
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.layers import Layer, InputSpec
-from tensorflow.keras import initializers
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
-import tensorflow.keras.backend as K
 
-import handshape_datasets as hd
+from sklearn.utils.class_weight import compute_class_weight
+
+from datasets import load
 from densenet import densenet_model
 
 print(tf.__version__)
@@ -127,24 +122,20 @@ summary_file = save_directory + 'summary.csv'
 print("hyperparameters set")
 print(tf.test.is_gpu_available())
 
-DATASET_PATH = '/develop/data/{}/data'.format(dataset_name)
+x, y = load(dataset_name)
 
-if not os.path.exists(DATASET_PATH):
-    os.makedirs(DATASET_PATH)
+n_classes = len(np.unique(y))
+image_shape = np.shape(x)[1:]
 
-data = hd.load(dataset_name, DATASET_PATH)
-
-features = data[0]
-labels = data[1]['y']
-
-n_classes = len(np.unique(labels))
-image_shape = np.shape(data[0])[1:]
-
-x_train, x_test, y_train, y_test = train_test_split(features,
-                                                    labels,
+x_train, x_test, y_train, y_test = train_test_split(x,
+                                                    y,
                                                     test_size=0.33,
                                                     random_state=42)
 x_train, x_test = x_train / 255.0, x_test / 255.0
+
+class_weights = compute_class_weight('balanced', 
+                                     np.unique(y_train),
+                                     y_train)
 
 print("data loaded")
 
@@ -183,7 +174,7 @@ test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
 def train_step(images, labels):
     with tf.GradientTape() as tape:
         predictions = model(tf.cast(images, tf.float32), training=True)
-        loss = loss_object(labels, predictions)
+        loss = loss_object(labels, predictions, sample_weight=class_weights)
     gradients = tape.gradient(loss, model.trainable_variables)
     optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
@@ -193,7 +184,7 @@ def train_step(images, labels):
 @tf.function
 def test_step(images, labels):
     predictions = model(tf.cast(images, tf.float32), training=False)
-    t_loss = loss_object(labels, predictions)
+    t_loss = loss_object(labels, predictions, sample_weight=class_weights)
 
     test_loss(t_loss)
     test_accuracy(labels, predictions)
