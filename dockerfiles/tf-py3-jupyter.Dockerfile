@@ -17,15 +17,20 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN python3 --version
 
+# Clone and install handshape datasets
 RUN git clone --branch=develop https://github.com/midusi/handshape_datasets.git /tf/lib/handshape_datasets
 RUN pip3 install -e /tf/lib/handshape_datasets
 
+# Clone and install proto-net
 RUN git clone https://github.com/ulises-jeremias/prototypical-networks-tf.git /tf/lib/prototypical-networks-tf
 RUN pip3 install -e /tf/lib/prototypical-networks-tf
 
+# Install dense-net
 RUN pip3 install densenet
 
-RUN pip3 install -e /develop/src/proto-net
+# Install proto-net scripts and handshape-recognition utils
+RUN pip3 install -e /develop/
+
 RUN pip3 install sklearn opencv-python IPython
 RUN if [[ DOCKER_ENV == "gpu" ]]; then pip3 install -q -U tf-nightly-gpu-2.0-preview tb-nightly; fi
 
