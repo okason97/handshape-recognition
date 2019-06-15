@@ -1,4 +1,4 @@
-import src.dense-net.train as train
+import src.dense_net.train as train
 
 nb_layers_values = [6,12,16,24]
 config = {
