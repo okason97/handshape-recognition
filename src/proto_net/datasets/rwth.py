@@ -2,23 +2,25 @@ import os
 import glob
 import numpy as np
 import tensorflow as tf
-import handshape_datasets as hd
-from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
+import handshape_datasets as hd
+from src.utils.model_selection import train_test_split_balanced
 
 class DataLoader(object):
-    def __init__(self, data, n_classes, n_way, n_support, n_query):
+    def __init__(self, data, n_classes, n_way, n_support, n_query, x_dim):
         self.data = data
         self.n_way = n_way
         self.n_classes = n_classes
         self.n_support = n_support
         self.n_query = n_query
+        self.x_dim = x_dim
 
     def get_next_episode(self):
         n_examples = self.data.shape[1]
-        support = np.zeros([self.n_way, self.n_support, 132, 92, 3], dtype=np.float32)
-        query = np.zeros([self.n_way, self.n_query, 132, 92, 3], dtype=np.float32)
+        w, h, c = self.x_dim
+        support = np.zeros([self.n_way, self.n_support, w, h, c], dtype=np.float32)
+        query = np.zeros([self.n_way, self.n_query, w, h, c], dtype=np.float32)
         classes_ep = np.random.permutation(self.n_classes)[:self.n_way]
 
         for i, i_class in enumerate(classes_ep):
@@ -44,45 +46,57 @@ def load_rwth(data_dir, config, splits):
     DATASET_NAME = "rwth"
     DATASET_PATH = "/develop/data/rwth/data"
 
-    loadedData = hd.load(DATASET_NAME, DATASET_PATH)
+    data = hd.load(DATASET_NAME, DATASET_PATH)
 
-    features = loadedData[0]
-    classes = loadedData[1]['y']
-    uniqueClasses, imgsPerClass = np.unique(classes, return_counts=True)
+    features = data[0]
+    classes = data[1]['y']
 
-    x_train, x_test, y_train, y_test = train_test_split(features,
-                                                        classes,
-                                                        test_size=0.33,
-                                                        random_state=42)
+    good_min = 20
+    good_classes = []
+    
+    for i in range(len(classes)):
+        images = features[np.equal(i, classes)]
+        if len(images) >= good_min:
+            good_classes = good_classes + [i]
+            
+    good_x = features[np.in1d(classes, good_classes)]
+    good_y = classes[np.in1d(classes, good_classes)]
+    my_dict = dict(zip(np.unique(good_y), range(len(np.unique(good_y)))))
+    good_y = np.vectorize(my_dict.get)(good_y)
+
+    features, classes = good_x, good_y
+
+    uniqueClasses = np.unique(classes)
+
+    x_train, x_test, y_train, y_test = train_test_split_balanced(features,
+                                                                 classes,
+                                                                 test_size=0.33,
+                                                                 n_train_per_class=20,
+                                                                 n_test_per_class=10)
     x_train, x_test = x_train / 255.0, x_test / 255.0
 
-    trainClasses, amountPerTrain = np.unique(y_train, return_counts=True)
-    testClasses, amountPerTest = np.unique(y_test, return_counts=True)
+    _, amountPerTrain = np.unique(y_train, return_counts=True)
+    _, amountPerTest = np.unique(y_test, return_counts=True)
 
-    if config['model.type'] in ['processed']:
-        train_datagen_args = {
-            'featurewise_center': True,
-            'featurewise_std_normalization': True,
-            'rotation_range': 10,
-            'width_shift_range': 0.10,
-            'height_shift_range': 0.10,
-            'horizontal_flip': True,
-            'fill_mode': 'constant',
-            'cval': 0
-        }
-    else:
-        train_datagen_args = {
-            'featurewise_center': True,
-            'featurewise_std_normalization': True
-        }
-
+    train_datagen_args = dict(featurewise_center=True,
+                              featurewise_std_normalization=True,
+                              rotation_range=config['data.rotation_range'],
+                              width_shift_range=config['data.width_shift_range'],
+                              height_shift_range=config['data.height_shift_range'],
+                              horizontal_flip=config['data.horizontal_flip'],
+                              fill_mode='constant',
+                              cval=0)
     train_datagen = ImageDataGenerator(train_datagen_args)
     train_datagen.fit(x_train)
 
     test_datagen_args = dict(featurewise_center=True,
-                             featurewise_std_normalization=True)
+                             featurewise_std_normalization=True,
+                             fill_mode='constant',
+                             cval=0)
     test_datagen = ImageDataGenerator(test_datagen_args)
     test_datagen.fit(x_train)
+
+    w, h, c = list(map(int, config['model.x_dim'].split(',')))
 
     ret = {}
     for split in splits:
@@ -129,7 +143,8 @@ def load_rwth(data_dir, config, splits):
                                  n_classes=len(uniqueClasses),
                                  n_way=n_way,
                                  n_support=n_support,
-                                 n_query=n_query)
+                                 n_query=n_query,
+                                 x_dim=(w, h, c))
 
         ret[split] = data_loader
 

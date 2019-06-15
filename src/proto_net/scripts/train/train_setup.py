@@ -15,7 +15,7 @@ import tensorflow as tf
 
 from protonet.models import Prototypical
 from protonet import TrainEngine
-from datasets import load
+from src.proto_net.datasets import load
 
 def train(config):
     np.random.seed(2019)
@@ -33,7 +33,8 @@ def train(config):
     train_summary_file = f"{config['summary.save_path'].format('train', model_type, now_as_str)}"
     test_summary_file = f"{config['summary.save_path'].format('test', model_type, now_as_str)}"
     csv_output_map_file = f"results/{config['data.dataset']}/proto-net/{config['data.dataset']}_protonet_results.csv"
-
+    summary_file = f"results/summary.csv"
+    
     # Output dirs
     data_dir = f"data/{config['data.dataset']}"
     model_dir = model_file[:model_file.rfind('/')]
@@ -63,6 +64,12 @@ def train(config):
 
     train_summary_writer = tf.summary.create_file_writer(train_summary_file)
     val_summary_writer = tf.summary.create_file_writer(test_summary_file)
+
+    # create summary file if not exists
+    if not os.path.exists(summary_file):
+        file = open(summary_file, 'w')
+        file.write("datetime, model, config, min_loss, min_loss_accuracy\n")
+        file.close()
 
     # create map file if not exists
     if not os.path.exists(csv_output_file):
@@ -109,6 +116,8 @@ def train(config):
 
     # Val losses for patience
     val_losses = []
+    min_loss = 100
+    min_loss_acc = 0
 
     @tf.function
     def loss(support, query):
@@ -179,6 +188,8 @@ def train(config):
         if cur_loss < state['best_val_loss']:
             print("Saving new best model with loss: {}".format(cur_loss))
             state['best_val_loss'] = cur_loss
+            min_loss = cur_loss
+            min_loss_acc = val_acc.result()
             model.save(model_file)
         val_losses.append(cur_loss)
 
@@ -230,6 +241,14 @@ def train(config):
             n_episodes=config['data.episodes'])
 
     time_end = time.time()
+
+    file = open(summary_file, 'a+') 
+    summary = "{}, {}, proto-net, {}, {}, {}\n".format(now_as_str,
+                                                     config['data.dataset'],
+                                                     config_file,
+                                                     min_loss,
+                                                     min_loss_acc)
+    file.write(summary)
 
     elapsed = time_end - time_start
     h, min = elapsed//3600, elapsed%3600//60
