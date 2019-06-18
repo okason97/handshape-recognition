@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+has_param() {
+    local term="$1"
+    shift
+    for arg; do
+        if [[ $arg == "$term" ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
 . ./scripts/flags/declares.sh
 
 variables["--mode"]="mode"
@@ -12,4 +23,11 @@ config=${config:-"lsa16"}
 
 echo "Running $mode mode with $config configuration file"
 
-python src/proto-net/scripts/$mode/run_$mode.py --config src/proto-net/config/config_$config.conf
+all=""
+
+if has_param '--all' "$@"
+then
+    all="_all"
+fi
+
+python src/proto_net/scripts/$mode/run_$mode$all.py --config src/proto_net/config/config_$config.conf

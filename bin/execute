@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+./bin/protonet --mode train --all && ./bin/densenet_train_all.py
