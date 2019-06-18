@@ -9,7 +9,6 @@ config = {
     'model.growth_rate': [32,64,128], 
     'model.nb_layers': [[6,12],[6,12,16],[6,12,24,16]],
     'model.reduction': [0,0.2],
-    'train.lr': 0.001,
 }
 
 for dataset_name in config['data.dataset_name']:
@@ -20,18 +19,17 @@ for dataset_name in config['data.dataset_name']:
                     for growth_rate in config['model.growth_rate']:
                         for nb_layers in config['model.nb_layers']:
                             for reduction in config['model.reduction']:
-                                for lr in config['train.lr']:
                                     try:
                                         train(dataset_name=dataset_name,rotation_range=rotation_range,
                                               width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                                               horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                              nb_layers=nb_layers,reduction=reduction,lr=lr, batch_size=32)
+                                              nb_layers=nb_layers,reduction=reduction, batch_size=32)
                                     except:
                                         try:
                                             train(dataset_name=dataset_name,rotation_range=rotation_range,
                                                 width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                                                 horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                                nb_layers=nb_layers,reduction=reduction,lr=lr, batch_size=16)
+                                                nb_layers=nb_layers,reduction=reduction, batch_size=16)
                                         except:
                                             print("Error with {}, growth: {}, reduction: {}. Probably memory".format(nb_layers, growth_rate, reduction))
                                     finally:
@@ -44,4 +42,3 @@ for dataset_name in config['data.dataset_name']:
                                         print("growth_rate: {}".format(growth_rate))
                                         print("nb_layers: {}".format(nb_layers))
                                         print("reduction: {}".format(reduction))
-                                        print("lr: {}".format(lr))
