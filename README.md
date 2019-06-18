@@ -115,4 +115,102 @@ $ ./bin/protonet --mode eval --config <config>
 
 ### Dense Net
 
-. . .
+Tensorflow 2 implementation of Densenet using Squeeze and Excitation layers.
+
+Inspired by flyyufelix keras implementation (https://github.com/flyyufelix/DenseNet-Keras).
+
+For more information about densenet please refer to the original paper (https://arxiv.org/abs/1608.06993).
+
+To train run the following command
+```sh
+$ python train_single.py
+```
+
+you can include the following arguments for further customization
+
+Dataset:
+```sh
+--dataset=<dataset>
+```
+`<dataset> = lsa16 | rwth`
+
+Rotation angle in degrees:
+```sh
+--rotation=<int>
+```
+
+Widht shift:
+```sh
+--w-shift=<float>
+```
+
+Height shift:
+```sh
+--h-shift=<float>
+```
+
+Horizontal flip:
+```sh
+--h-flip=<boolean>
+```
+
+Densenet's growth rate:
+```sh
+--growth-r=<int>
+```
+
+Densenet's number of dense layers:
+```sh
+--nb-layers=<nb-layers>
+```
+`<nb-layers> = <int>[:<int>]*`
+
+Densenet's reduction:
+```sh
+--reduction=<float>
+```
+
+Learning rate:
+```sh
+--lr=<float>
+```
+
+Epochs:
+```sh
+--epochs=<int>
+```
+
+Maximum patience:
+```sh
+--patience=<int>
+```
+
+Log frequency:
+```sh
+--log-freq=<int>
+```
+
+Save frequency (only works if checkpoints is set to True):
+```sh
+--save-freq=<int>
+```
+
+Models directory (only works if checkpoints is set to True):
+```sh
+--models-dir=<string>
+```
+
+Results directory:
+```sh
+--results_dir=<string>
+```
+
+Checkpoint model saving:
+```sh
+--checkpoints=<boolean>
+```
+
+Use of class weights:
+```sh
+--weight_classes=<boolean>
+```
