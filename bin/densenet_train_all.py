@@ -1,16 +1,15 @@
 import src.dense_net.train as train
 
-nb_layers_values = [6,12,16,24]
 config = {
     'data.dataset_name': ['lsa16','rwth'], 
-    'data.rotation_range': [0,5,10,25,45], 
-    'data.width_shift_range': [0,0.1,0.2], 
-    'data.height_shift_range': [0,0.1,0.2], 
+    'data.rotation_range': [0,5,25], 
+    'data.width_shift_range': [0,0.2], 
+    'data.height_shift_range': [0,0.2], 
     'data.horizontal_flip': [True,False], 
     'model.growth_rate': [32,64,128], 
-    'model.nb_layers': [[6,12],[6,16],[12,16],[6,12,16],[6,12,24],[6,24,16],[6,12,24,16]],
-    'model.reduction': [0,0.1,0.2],
-    'train.lr': 0.001,0.003,0.01,
+    'model.nb_layers': [[6,12],[6,12,16],[6,12,24,16]],
+    'model.reduction': [0,0.2],
+    'train.lr': 0.001,
 }
 
 for dataset_name in config['data.dataset_name']:

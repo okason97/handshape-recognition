@@ -10,7 +10,7 @@ from datetime import datetime
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
-
+from sklearn.utils.class_weight import compute_class_weight
 
 from datasets import load
 from densenet import densenet_model
@@ -20,7 +20,7 @@ print(tf.__version__)
 def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range = 0.10,
           height_shift_range = 0.10, horizontal_flip = True, growth_rate = 128,
           nb_layers = [6,12], reduction = 0.0, lr = 0.001, epochs = 400,
-          max_patience = 25, batch_size= 16, checkpoints = False):
+          max_patience = 25, batch_size= 16, checkpoints = False, weight_classes = False):
 
     # log
     log_freq = 1
@@ -34,7 +34,7 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
     results = 'epoch,loss,accuracy,test_loss,test_accuracy\n'
 
     date = datetime.now().strftime("%Y_%m_%d-%H:%M:%S")
-    identifier = "{}-growth-{}-densenet-\nmat(
+    identifier = "{}-growth-{}-densenet-{}".format(
         '-'.join([str(i) for i in nb_layers]),
         growth_rate, 
         dataset_name) + date
@@ -57,11 +57,10 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
 
     n_classes = len(np.unique(y))
 
-    '''
-    class_weights = compute_class_weight('balanced', 
-                                        np.unique(y),
-                                        y)
-    '''
+    if weight_classes:
+        class_weights = compute_class_weight('balanced', 
+                                            np.unique(y),
+                                            y)
     
     print("data loaded")
 
@@ -87,7 +86,51 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
 
     print("model created")
 
-    loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
+    if weight_classes:
+        loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
+
+        def weightedLoss(originalLossFunc, weightsList):
+
+            @tf.function
+            def lossFunc(true, pred):
+
+                axis = -1 #if channels last 
+                #axis=  1 #if channels first
+
+                #argmax returns the index of the element with the greatest value
+                #done in the class axis, it returns the class index    
+                classSelectors = tf.argmax(true, axis=axis, output_type=tf.int32) 
+
+                #considering weights are ordered by class, for each class
+                #true(1) if the class index is equal to the weight index   
+                classSelectors = [tf.equal(i, classSelectors) for i in range(len(weightsList))]
+
+                #casting boolean to float for calculations  
+                #each tensor in the list contains 1 where ground true class is equal to its index 
+                #if you sum all these, you will get a tensor full of ones. 
+                classSelectors = [tf.cast(x, tf.float32) for x in classSelectors]
+
+                #for each of the selections above, multiply their respective weight
+                weights = [sel * w for sel,w in zip(classSelectors, weightsList)] 
+
+                #sums all the selections
+                #result is a tensor with the respective weight for each element in predictions
+                weightMultiplier = weights[0]
+                for i in range(1, len(weights)):
+                    weightMultiplier = weightMultiplier + weights[i]
+
+
+                #make sure your originalLossFunc only collapses the class axis
+                #you need the other axes intact to multiply the weights tensor
+                loss = originalLossFunc(true,pred) 
+                loss = loss * weightMultiplier
+
+                return loss
+            return lossFunc
+        loss_object = weightedLoss(loss_object, class_weights)
+    else:
+        loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
+
     optimizer = tf.keras.optimizers.Adam()
 
     train_loss = tf.keras.metrics.Mean(name='train_loss')
@@ -216,7 +259,7 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
         'train.batch_size': batch_size, 
     }
 
-    with open(save_directory + config_directory + '.json', 'w') as json_file:
+    with open(save_directory + config_directory + identifier + '.json', 'w') as json_file:
         json.dump(config, json_file)
 
     file = open(summary_file, 'a+') 
