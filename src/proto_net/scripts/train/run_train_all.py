@@ -4,7 +4,7 @@ from train_setup import train
 
 configs = {
     'lsa16': {
-        'data.train_way': [5, 10, 15, 16, 17, 18, 19, 20],
+        'data.train_way': [5, 10, 15, 18, 19, 20],
         'data.train_support_query': [(1, 1), (1, 5), (5, 1), (5, 5), (1, 29), (5,25), (5, 15)],
         'data.test_way': [5, 10],
         'data.test_support_query': [(1, 1), (1, 5), (5, 1), (5, 5), (1, 15), (5, 11), (5, 10)],
@@ -14,12 +14,12 @@ configs = {
         'data.height_shift_range': [0, 0.1, 0.2],
         'data.horizontal_flip': [True, False], 
 
-        'model.type': ['preprocess'],
+        'model.type': ['expr'],
 
         'train.lr': [0.001, 0.003, 0.01]
     },
     'rwth': {
-        'data.train_way': [5, 10, 15, 16, 17, 18, 19, 20],
+        'data.train_way': [5, 10, 15, 18, 19, 20],
         'data.train_support_query': [(1, 1), (1, 5), (5, 1), (5, 5), (1, 19), (5, 15), (5, 10)],
         'data.test_way': [5, 10],
         'data.test_support_query': [(1, 1), (1, 5), (5, 1), (5, 5), (1, 9)],
@@ -29,7 +29,7 @@ configs = {
         'data.height_shift_range': [0, 0.1, 0.2],
         'data.horizontal_flip': [True, False], 
 
-        'model.type': ['preprocess'],
+        'model.type': ['expr'],
 
         'train.lr': [0.001, 0.003, 0.01]
     }
