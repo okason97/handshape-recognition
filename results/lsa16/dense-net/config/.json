@@ -1,1 +1,0 @@
-{"data.dataset_name": "lsa16", "data.rotation_range": 0, "data.width_shift_range": 0, "data.height_shift_range": 0, "data.horizontal_flip": true, "model.growth_rate": 32, "model.nb_layers": [6, 12, 24, 16], "model.reduction": 0, "train.lr": 0.001, "train.epochs": 400, "train.max_patience": 25, "train.batch_size": 32}
