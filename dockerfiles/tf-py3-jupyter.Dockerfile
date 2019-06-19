@@ -38,4 +38,6 @@ RUN if [[ DOCKER_ENV == "gpu" ]]; then pip3 install -q -U tf-nightly-gpu-2.0-pre
 RUN mkdir -p /.handshape_datasets
 RUN chmod -R a+rwx /.handshape_datasets
 
-WORKDIR /tf
+WORKDIR /develop
+
+CMD ["bash", "-c", "source /etc/bash.bashrc && /develop/bin/execute"]
