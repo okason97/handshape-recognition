@@ -36,7 +36,7 @@ RUN pip3 install densenet
 RUN pip3 install -e /develop/
 
 RUN pip3 install sklearn opencv-python IPython
-RUN if [[ "$DOCKER_ENV" = "gpu" ]]; then echo -e "\e[1;31mINSTALLING GPU SUPPORT\e[0;33m"; pip3 install -q -U tf-nightly-gpu-2.0-preview tb-nightly; fi
+RUN if [[ "$DOCKER_ENV" = "gpu" ]]; then echo -e "\e[1;31mINSTALLING GPU SUPPORT\e[0;33m"; pip3 install -U tf-nightly-gpu-2.0-preview tb-nightly; fi
 
 # Default dir for handshape datasets lib - use /data instead
 RUN mkdir -p /.handshape_datasets
@@ -44,4 +44,4 @@ RUN chmod -R a+rwx /.handshape_datasets
 
 WORKDIR /develop
 
-CMD ["bash", "-c", "source /etc/bash.bashrc && /develop/bin/execute"]
+# CMD ["bash", "-c", "source /etc/bash.bashrc && /develop/bin/execute"]
