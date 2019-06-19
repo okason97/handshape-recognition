@@ -116,8 +116,8 @@ def train(config):
 
     # Val losses for patience
     val_losses = []
-    min_loss = 100
-    min_loss_acc = 0
+    min_loss = [100]
+    min_loss_acc = [0]
 
     @tf.function
     def loss(support, query):
@@ -188,8 +188,8 @@ def train(config):
         if cur_loss < state['best_val_loss']:
             print("Saving new best model with loss: {}".format(cur_loss))
             state['best_val_loss'] = cur_loss
-            min_loss = cur_loss
-            min_loss_acc = val_acc.result()
+            min_loss[0] = cur_loss
+            min_loss_acc[0] = val_acc.result()
             model.save(model_file)
         val_losses.append(cur_loss)
 
@@ -246,8 +246,8 @@ def train(config):
     summary = "{}, {}, proto-net, {}, {}, {}\n".format(now_as_str,
                                                      config['data.dataset'],
                                                      config_file,
-                                                     min_loss,
-                                                     min_loss_acc)
+                                                     min_loss[0],
+                                                     min_loss_acc[0])
     file.write(summary)
 
     elapsed = time_end - time_start
