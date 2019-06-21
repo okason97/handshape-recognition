@@ -6,11 +6,11 @@ configs = {
     'lsa16': {
         'data.train_way': [5, 17],
         'data.test_way': [5],
-        'data.support_query': [(1, 1, 1, 1), (1, 15, 1, 1), (1, 29, 1, 1), (1, 1, 1, 15), (5, 5, 5, 5), (5, 25, 5, 5), (5, 5, 5, 11)],
+        'data.support_query': [(1, 1, 1, 1), (1, 15, 1, 1), (5, 5, 5, 5), (5, 5, 5, 11)],
 
-        'data.rotation_range': [0, 5, 25], 
-        'data.width_shift_range': [0, 0.2],
-        'data.height_shift_range': [0, 0.2],
+        'data.rotation_range': [0, 25],
+        'data.width_shift_range': [0.1],
+        'data.height_shift_range': [0.1],
         'data.horizontal_flip': [True, False], 
 
         'model.type': ['expr'],
@@ -20,11 +20,11 @@ configs = {
     'rwth': {
         'data.train_way': [5, 18],
         'data.test_way': [5],
-        'data.support_query': [(1, 1, 1, 1), (1, 19, 1, 1), (1, 1, 1, 9), (5, 5, 5, 5), (5, 15, 5, 5)],
+        'data.support_query': [(1, 1, 1, 1), (1, 19, 1, 1), (5, 5, 5, 5), (5, 15, 5, 5)],
 
-        'data.rotation_range': [0, 5, 25], 
-        'data.width_shift_range': [0, 0.2], 
-        'data.height_shift_range': [0, 0.2],
+        'data.rotation_range': [0, 25], 
+        'data.width_shift_range': [0.1], 
+        'data.height_shift_range': [0.1],
         'data.horizontal_flip': [True, False], 
 
         'model.type': ['expr'],
