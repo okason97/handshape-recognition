@@ -44,4 +44,4 @@ RUN chmod -R a+rwx /.handshape_datasets
 
 WORKDIR /develop
 
-# CMD ["bash", "-c", "source /etc/bash.bashrc && /develop/bin/execute"]
+CMD ["bash", "-c", "source /etc/bash.bashrc && /develop/bin/execute"]
