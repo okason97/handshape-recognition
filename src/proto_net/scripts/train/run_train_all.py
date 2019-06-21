@@ -6,7 +6,8 @@ configs = {
     'lsa16': {
         'data.train_way': [5, 17],
         'data.test_way': [5],
-        'data.support_query': [(1, 1, 1, 1), (1, 15, 1, 1), (5, 5, 5, 5), (5, 5, 5, 11)],
+        # done (1, 1, 1, 1) in previous experiments
+        'data.support_query': [(1, 15, 1, 1), (5, 5, 5, 5), (5, 5, 5, 11), (5, 25, 5, 5)],
 
         'data.rotation_range': [0, 25],
         'data.width_shift_range': [0.1],
