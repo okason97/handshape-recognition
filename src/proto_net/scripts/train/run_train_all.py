@@ -22,7 +22,7 @@ configs = {
         'train.lr': [0.001]
     },
     'rwth': {
-        'data.train_way': [30, 5],
+        'data.train_way': [20, 5],
         'data.test_way': [5],
         'data.support_query': [(1, 1, 1, 1), (5, 5, 5, 5), (1, 19, 1, 1), (5, 15, 5, 5)],
         
@@ -68,7 +68,7 @@ for dataset in ['rwth']:
     for train_way in ds_config['data.train_way']:
         for test_way in ds_config['data.test_way']:
             for train_support, train_query, test_support, test_query in ds_config['data.support_query']:
-                for rotation_range, width_shift_range, height_shift_range, horizontal_flip in ds_config['data.rotation_range']:
+                for rotation_range, width_shift_range, height_shift_range, horizontal_flip in ds_config['data.args']:
                     for model_type in ds_config['model.type']:
                         for nb_layers in ds_config['model.nb_layers']:
                             for nb_filters in ds_config['model.nb_filters']:
