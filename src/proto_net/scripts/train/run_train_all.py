@@ -4,7 +4,7 @@ from train_setup import train
 
 configs = {
     'lsa16': {
-        'data.train_way': [5, 17],
+        'data.train_way': [5, 16],
         'data.test_way': [5],
         # done (1, 1, 1, 1) in previous experiments
         'data.support_query': [(1, 15, 1, 1), (5, 5, 5, 5), (5, 5, 5, 11), (5, 25, 5, 5)],
@@ -22,7 +22,7 @@ configs = {
         'train.lr': [0.001]
     },
     'rwth': {
-        'data.train_way': [30, 5],
+        'data.train_way': [20, 5],
         'data.test_way': [5],
         'data.support_query': [(1, 1, 1, 1), (5, 5, 5, 5), (1, 19, 1, 1), (5, 15, 5, 5)],
         
