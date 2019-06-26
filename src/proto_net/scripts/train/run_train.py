@@ -9,7 +9,7 @@ def preprocess_config(c):
     int_params = ['data.train_way', 'data.test_way', 'data.train_support',
                   'data.test_support', 'data.train_query', 'data.test_query',
                   'data.episodes', 'data.gpu', 'data.cuda', 'model.z_dim', 
-                  'train.epochs', 'train.patience']
+                  'train.epochs', 'train.patience', 'model.nb_layers', 'model.nb_filters']
     float_params = ['train.lr', 'data.rotation_range',
                     'data.width_shift_range', 'data.height_shift_range']
     for param in c:

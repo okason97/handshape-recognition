@@ -26,7 +26,7 @@ RUN git clone --branch=develop https://github.com/midusi/handshape_datasets.git 
 RUN pip3 install -e /tf/lib/handshape_datasets
 
 # Clone and install proto-net
-RUN git clone https://github.com/ulises-jeremias/prototypical-networks-tf.git /tf/lib/prototypical-networks-tf
+RUN git clone --branch=develop https://github.com/ulises-jeremias/prototypical-networks-tf.git /tf/lib/prototypical-networks-tf
 RUN pip3 install -e /tf/lib/prototypical-networks-tf
 
 # Install dense-net
