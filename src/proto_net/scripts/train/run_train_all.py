@@ -73,25 +73,28 @@ for dataset in ['rwth']:
                         for nb_layers in ds_config['model.nb_layers']:
                             for nb_filters in ds_config['model.nb_filters']:
                                 for lr in ds_config['train.lr']:
-                                    custom_params = {
-                                        'data.train_way': train_way,
-                                        'data.train_support': train_support,
-                                        'data.train_query': train_query,
-                                        'data.test_way': test_way,
-                                        'data.test_support': test_support,
-                                        'data.test_query': test_query,
+                                    try:
+                                        custom_params = {
+                                            'data.train_way': train_way,
+                                            'data.train_support': train_support,
+                                            'data.train_query': train_query,
+                                            'data.test_way': test_way,
+                                            'data.test_support': test_support,
+                                            'data.test_query': test_query,
 
-                                        'data.rotation_range': rotation_range, 
-                                        'data.width_shift_range': width_shift_range,
-                                        'data.height_shift_range': height_shift_range,
-                                        'data.horizontal_flip': horizontal_flip, 
+                                            'data.rotation_range': rotation_range, 
+                                            'data.width_shift_range': width_shift_range,
+                                            'data.height_shift_range': height_shift_range,
+                                            'data.horizontal_flip': horizontal_flip, 
 
-                                        'model.type': model_type,
-                                        'model.nb_layers': nb_layers,
-                                        'model.nb_filters': nb_filters,
+                                            'model.type': model_type,
+                                            'model.nb_layers': nb_layers,
+                                            'model.nb_filters': nb_filters,
 
-                                        'train.lr': lr
-                                    }
+                                            'train.lr': lr
+                                        }
 
-                                    preprocessed_config = preprocess_config({ **config_from_file['TRAIN'], **custom_params })
-                                    train(preprocessed_config)
+                                        preprocessed_config = preprocess_config({ **config_from_file['TRAIN'], **custom_params })
+                                        train(preprocessed_config)
+                                    except:
+                                        print("Error. Probably memory :c")
