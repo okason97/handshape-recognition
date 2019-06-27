@@ -22,9 +22,9 @@ configs = {
         'train.lr': [0.001]
     },
     'rwth': {
-        'data.train_way': [20, 5],
+        'data.train_way': [5, 20],
         'data.test_way': [5],
-        'data.support_query': [(1, 1, 1, 1), (5, 5, 5, 5), (1, 19, 1, 1), (5, 15, 5, 5)],
+        'data.support_query': [(5, 5, 5, 5), (5, 15, 5, 5)],
         
         #'data.rotation_range': [0, 25], 
         #'data.width_shift_range': [0.1], 
