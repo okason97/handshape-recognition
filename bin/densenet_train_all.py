@@ -8,7 +8,7 @@ config = {
     'data.horizontal_flip': [True,False], 
     'model.growth_rate': [32,64,128], 
     'model.nb_layers': [[6,12],[6,12,16],[6,12,24,16]],
-    'model.reduction': [0,0.2],
+    'model.reduction': [0,0.5],
 }
 
 for dataset_name in config['data.dataset_name']:
