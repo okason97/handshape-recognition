@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 
 from sklearn.utils.class_weight import compute_class_weight
 
-from datasets import load
+from src.dense_net.datasets import load
 from densenet import densenet_model
 
 print(tf.__version__)

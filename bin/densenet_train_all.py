@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import src.dense_net.train as train
 
 config = {
