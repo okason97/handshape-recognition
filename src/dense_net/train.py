@@ -40,7 +40,7 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
         dataset_name) + date
 
     csv_output_map_file = save_directory + dataset_name + "_densenet.csv"
-    summary_file = save_directory + 'summary.csv'
+    summary_file = general_directory + 'summary.csv'
 
     print("hyperparameters set")
     #print(tf.test.is_gpu_available())
@@ -265,7 +265,7 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
     file = open(summary_file, 'a+') 
     summary = "{}, {}, dense-net, {}, {}, {}\n".format(date,
                                                        dataset_name,
-                                                       save_directory + config_directory,
+                                                       save_directory + config_directory + identifies + '.json',
                                                        min_loss,
                                                        min_loss_acc)
     file.write(summary)
