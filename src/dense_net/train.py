@@ -29,7 +29,7 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
     results_directory = 'results/'
     config_directory = 'config/'
 
-    general_directory = "/develop/results/"
+    general_directory = "./results/"
     save_directory = general_directory + "{}/dense-net/".format(dataset_name)
     results = 'epoch,loss,accuracy,test_loss,test_accuracy\n'
 
@@ -41,6 +41,12 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
 
     csv_output_map_file = save_directory + dataset_name + "_densenet.csv"
     summary_file = general_directory + 'summary.csv'
+
+    # create summary file if not exists
+    if not os.path.exists(summary_file):
+        file = open(summary_file, 'w')
+        file.write("datetime, model, config, min_loss, min_loss_accuracy\n")
+        file.close()
 
     print("hyperparameters set")
     #print(tf.test.is_gpu_available())
@@ -259,15 +265,15 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
         'train.batch_size': batch_size, 
     }
 
-    with open(save_directory + config_directory + identifier + '.json', 'w') as json_file:
-        json.dump(config, json_file)
+    file = open(save_directory + config_directory + identifier + '.json', 'w')
+    file.write(json.dump(config, indent=2))
+    file.close()
 
-    file = open(summary_file, 'a+') 
+    file = open(summary_file, 'a+')
     summary = "{}, {}, dense-net, {}, {}, {}\n".format(date,
                                                        dataset_name,
-                                                       save_directory + config_directory + identifies + '.json',
+                                                       save_directory + config_directory + identifier + '.json',
                                                        min_loss,
                                                        min_loss_acc)
     file.write(summary)
-
     file.close()
