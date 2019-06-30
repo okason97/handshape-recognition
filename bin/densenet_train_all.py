@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-import src.dense_net.train as train
+from src.dense_net.train import train_densenet as train
 
 config = {
     'data.dataset_name': ['lsa16','rwth'], 
-    'data.rotation_range': [0,25], 
+    'data.rotation_range': [0,30], 
     'data.width_shift_range': [0,0.2], 
     'data.height_shift_range': [0,0.2], 
-    'data.horizontal_flip': [True,False], 
+    'data.horizontal_flip': [False,True], 
     'model.growth_rate': [32,64,128], 
     'model.nb_layers': [[6,12],[6,12,16],[6,12,24,16]],
     'model.reduction': [0,0.5],
