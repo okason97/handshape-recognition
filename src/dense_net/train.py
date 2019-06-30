@@ -266,7 +266,7 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
     }
 
     file = open(save_directory + config_directory + identifier + '.json', 'w')
-    file.write(json.dump(config, indent=2))
+    file.write(json.dumps(config, indent=2))
     file.close()
 
     file = open(summary_file, 'a+')
