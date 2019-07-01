@@ -31,15 +31,27 @@ for dataset_name in config['data.dataset_name']:
                         train(dataset_name=dataset_name,rotation_range=rotation_range,
                                 width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                                 horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                nb_layers=nb_layers,reduction=reduction, batch_size=32)
+                                nb_layers=nb_layers,reduction=reduction, batch_size=128)
                     except:
                         try:
                             train(dataset_name=dataset_name,rotation_range=rotation_range,
                                 width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                                 horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                nb_layers=nb_layers,reduction=reduction, batch_size=16)
+                                nb_layers=nb_layers,reduction=reduction, batch_size=64)
                         except:
-                            print("Error with {}, growth: {}, reduction: {}. Probably memory".format(nb_layers, growth_rate, reduction))
+                            try:
+                                train(dataset_name=dataset_name,rotation_range=rotation_range,
+                                    width_shift_range=width_shift_range, height_shift_range= height_shift_range,
+                                    horizontal_flip=horizontal_flip,growth_rate=growth_rate,
+                                    nb_layers=nb_layers,reduction=reduction, batch_size=32)
+                            except:
+                                try:
+                                    train(dataset_name=dataset_name,rotation_range=rotation_range,
+                                        width_shift_range=width_shift_range, height_shift_range= height_shift_range,
+                                        horizontal_flip=horizontal_flip,growth_rate=growth_rate,
+                                        nb_layers=nb_layers,reduction=reduction, batch_size=16)
+                                except:
+                                    print("Error with {}, growth: {}, reduction: {}. Probably memory".format(nb_layers, growth_rate, reduction))
                     finally:
                         print("Finished densenet with")
                         print("dataset_name: {}".format(dataset_name))
