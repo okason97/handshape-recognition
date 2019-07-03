@@ -2,13 +2,13 @@
 from src.dense_net.train import train_densenet as train
 
 config = {
-    'data.dataset_name': ['lsa16','rwth'], 
+    'data.dataset_name': ['rwth','lsa16'], 
     'data.rotation_range': [0,30], 
     'data.width_shift_range': [0,0.2], 
     'data.height_shift_range': [0,0.2], 
     'data.horizontal_flip': [False,True], 
-    'model.growth_rate': [32,64,128], 
-    'model.nb_layers': [[6,12],[6,12,16],[6,12,24,16]],
+    'model.growth_rate': [128,32,64], 
+    'model.nb_layers': [[6,12,24,16],[6,12],[6,12,16]],
     'model.reduction': [0,0.5],
 }
 
@@ -32,26 +32,32 @@ for dataset_name in config['data.dataset_name']:
                                 width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                                 horizontal_flip=horizontal_flip,growth_rate=growth_rate,
                                 nb_layers=nb_layers,reduction=reduction, batch_size=128)
-                    except:
+                    except tf.errors.ResourceExhaustedError as e:
                         try:
                             train(dataset_name=dataset_name,rotation_range=rotation_range,
                                 width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                                 horizontal_flip=horizontal_flip,growth_rate=growth_rate,
                                 nb_layers=nb_layers,reduction=reduction, batch_size=64)
-                        except:
+                        except tf.errors.ResourceExhaustedError as e:
                             try:
                                 train(dataset_name=dataset_name,rotation_range=rotation_range,
                                     width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                                     horizontal_flip=horizontal_flip,growth_rate=growth_rate,
                                     nb_layers=nb_layers,reduction=reduction, batch_size=32)
-                            except:
+                            except tf.errors.ResourceExhaustedError as e:
                                 try:
                                     train(dataset_name=dataset_name,rotation_range=rotation_range,
                                         width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                                         horizontal_flip=horizontal_flip,growth_rate=growth_rate,
                                         nb_layers=nb_layers,reduction=reduction, batch_size=16)
-                                except:
-                                    print("Error with {}, growth: {}, reduction: {}. Probably memory".format(nb_layers, growth_rate, reduction))
+                                except tf.errors.ResourceExhaustedError as e:
+                                    try:
+                                        train(dataset_name=dataset_name,rotation_range=rotation_range,
+                                            width_shift_range=width_shift_range, height_shift_range= height_shift_range,
+                                            horizontal_flip=horizontal_flip,growth_rate=growth_rate,
+                                            nb_layers=nb_layers,reduction=reduction, batch_size=8)
+                                    except tf.errors.ResourceExhaustedError as e:
+                                        print("Error with {}, growth: {}, reduction: {}. Probably memory".format(nb_layers, growth_rate, reduction))
                     finally:
                         print("Finished densenet with")
                         print("dataset_name: {}".format(dataset_name))
