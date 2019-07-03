@@ -1,5 +1,16 @@
 #!/usr/bin/env python
 from src.dense_net.train import train_densenet as train
+import tensorflow as tf
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+  # Restrict TensorFlow to only use the first GPU
+  try:
+    tf.config.experimental.set_visible_devices(gpus[0], 'GPU')
+    logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPU")
+  except RuntimeError as e:
+    # Visible devices must be set before GPUs have been initialized
+    print(e)
 
 config = {
     'data.dataset_name': ['rwth','lsa16'], 
@@ -29,35 +40,17 @@ for dataset_name in config['data.dataset_name']:
                 for reduction in config['model.reduction']:
                     try:
                         train(dataset_name=dataset_name,rotation_range=rotation_range,
-                                width_shift_range=width_shift_range, height_shift_range= height_shift_range,
-                                horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                nb_layers=nb_layers,reduction=reduction, batch_size=128)
-                    except tf.errors.ResourceExhaustedError as e:
+                            width_shift_range=width_shift_range, height_shift_range= height_shift_range,
+                            horizontal_flip=horizontal_flip,growth_rate=growth_rate,
+                            nb_layers=nb_layers,reduction=reduction, batch_size=16)
+                    except:
                         try:
                             train(dataset_name=dataset_name,rotation_range=rotation_range,
                                 width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                                 horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                nb_layers=nb_layers,reduction=reduction, batch_size=64)
-                        except tf.errors.ResourceExhaustedError as e:
-                            try:
-                                train(dataset_name=dataset_name,rotation_range=rotation_range,
-                                    width_shift_range=width_shift_range, height_shift_range= height_shift_range,
-                                    horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                    nb_layers=nb_layers,reduction=reduction, batch_size=32)
-                            except tf.errors.ResourceExhaustedError as e:
-                                try:
-                                    train(dataset_name=dataset_name,rotation_range=rotation_range,
-                                        width_shift_range=width_shift_range, height_shift_range= height_shift_range,
-                                        horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                        nb_layers=nb_layers,reduction=reduction, batch_size=16)
-                                except tf.errors.ResourceExhaustedError as e:
-                                    try:
-                                        train(dataset_name=dataset_name,rotation_range=rotation_range,
-                                            width_shift_range=width_shift_range, height_shift_range= height_shift_range,
-                                            horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                            nb_layers=nb_layers,reduction=reduction, batch_size=8)
-                                    except tf.errors.ResourceExhaustedError as e:
-                                        print("Error with {}, growth: {}, reduction: {}. Probably memory".format(nb_layers, growth_rate, reduction))
+                                nb_layers=nb_layers,reduction=reduction, batch_size=8)
+                        except:
+                            print("Error with {}, growth: {}, reduction: {}. Probably memory".format(nb_layers, growth_rate, reduction))
                     finally:
                         print("Finished densenet with")
                         print("dataset_name: {}".format(dataset_name))
