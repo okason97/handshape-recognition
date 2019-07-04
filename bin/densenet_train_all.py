@@ -18,23 +18,17 @@ config = {
     'data.width_shift_range': [0,0.2], 
     'data.height_shift_range': [0,0.2], 
     'data.horizontal_flip': [False,True], 
-    'model.growth_rate': [[16,32],[16,32,64],[32,64,128]], 
-    'model.nb_layers': [[6,12,24,16],[6,12],[6,12,16]],
+    'model.growth_rate': [[16,32,64],[16,32,64],[32,64,128]], 
+    'model.nb_layers': [[6,12,24,16],[6,12,16],[6,12]],
     'model.reduction': [0,0.5],
 }
 
 for dataset_name in config['data.dataset_name']:
     for i in range(2):
-        if i == 0:
-            rotation_range = config['data.rotation_range'][1]
-            width_shift_range = config['data.width_shift_range'][1]
-            height_shift_range = config['data.height_shift_range'][1]
-            horizontal_flip = config['data.horizontal_flip'][1]
-        else:
-            rotation_range = config['data.rotation_range'][0]
-            width_shift_range = config['data.width_shift_range'][0]
-            height_shift_range = config['data.height_shift_range'][0]
-            horizontal_flip = config['data.horizontal_flip'][0]            
+        rotation_range = config['data.rotation_range'][i]
+        width_shift_range = config['data.width_shift_range'][i]
+        height_shift_range = config['data.height_shift_range'][i]
+        horizontal_flip = config['data.horizontal_flip'][i]
         for i in range(3):
             nb_layers = config['model.nb_layers'][i]
             for growth_rate in config['model.growth_rate'][i]:
