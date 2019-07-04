@@ -18,7 +18,7 @@ config = {
     'data.width_shift_range': [0,0.2], 
     'data.height_shift_range': [0,0.2], 
     'data.horizontal_flip': [False,True], 
-    'model.growth_rate': [128,32,64], 
+    'model.growth_rate': [[16,32],[16,32,64],[32,64,128]], 
     'model.nb_layers': [[6,12,24,16],[6,12],[6,12,16]],
     'model.reduction': [0,0.5],
 }
@@ -35,32 +35,27 @@ for dataset_name in config['data.dataset_name']:
             width_shift_range = config['data.width_shift_range'][0]
             height_shift_range = config['data.height_shift_range'][0]
             horizontal_flip = config['data.horizontal_flip'][0]            
-        for growth_rate in config['model.growth_rate']:
-            for nb_layers in config['model.nb_layers']:
+        for i in range(3):
+            nb_layers = config['model.nb_layers'][i]
+            for growth_rate in config['model.growth_rate'][i]:
                 for reduction in config['model.reduction']:
                     try:
                         train(dataset_name=dataset_name,rotation_range=rotation_range,
-                            width_shift_range=width_shift_range, height_shift_range= height_shift_range,
-                            horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                            nb_layers=nb_layers,reduction=reduction, batch_size=64)
-                    except:
-                      try:
-                          train(dataset_name=dataset_name,rotation_range=rotation_range,
                               width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                               horizontal_flip=horizontal_flip,growth_rate=growth_rate,
                               nb_layers=nb_layers,reduction=reduction, batch_size=32)
-                      except:
+                    except:
                         try:
                             train(dataset_name=dataset_name,rotation_range=rotation_range,
-                                width_shift_range=width_shift_range, height_shift_range= height_shift_range,
-                                horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                nb_layers=nb_layers,reduction=reduction, batch_size=16)
+                                  width_shift_range=width_shift_range, height_shift_range= height_shift_range,
+                                  horizontal_flip=horizontal_flip,growth_rate=growth_rate,
+                                  nb_layers=nb_layers,reduction=reduction, batch_size=16)
                         except:
                             try:
                                 train(dataset_name=dataset_name,rotation_range=rotation_range,
-                                    width_shift_range=width_shift_range, height_shift_range= height_shift_range,
-                                    horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                    nb_layers=nb_layers,reduction=reduction, batch_size=8)
+                                      width_shift_range=width_shift_range, height_shift_range= height_shift_range,
+                                      horizontal_flip=horizontal_flip,growth_rate=growth_rate,
+                                      nb_layers=nb_layers,reduction=reduction, batch_size=8)
                             except:
                                 print("Error with {}, growth: {}, reduction: {}. Probably memory".format(nb_layers, growth_rate, reduction))
                     finally:
