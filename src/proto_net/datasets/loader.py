@@ -1,3 +1,4 @@
+from .ciarp import load_ciarp
 from .lsa16 import load_lsa16
 from .rwth import load_rwth
 
@@ -15,7 +16,9 @@ def load(data_dir, config, splits):
 
     """
 
-    if config['data.dataset'] == "lsa16":
+    if config['data.dataset'] == "ciarp":
+        ds = load_ciarp(data_dir, config, splits)
+    elif config['data.dataset'] == "lsa16":
         ds = load_lsa16(data_dir, config, splits)
     elif config['data.dataset'] == "rwth":
         ds = load_rwth(data_dir, config, splits)

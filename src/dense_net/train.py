@@ -39,7 +39,6 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
         growth_rate, 
         dataset_name) + date
 
-    csv_output_map_file = save_directory + dataset_name + "_densenet.csv"
     summary_file = general_directory + 'summary.csv'
 
     # create summary file if not exists
