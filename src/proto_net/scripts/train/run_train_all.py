@@ -21,6 +21,24 @@ configs = {
 
         'train.lr': [0.001]
     },
+    'ciarp': {
+        'data.train_way': [5, 1],
+        'data.test_way': [5, 1],
+        # done (1, 1, 1, 1) in previous experiments
+        'data.support_query': [(1, 1, 1, 1), (5, 5, 5, 5)],
+
+        #'data.rotation_range': [0, 25], 
+        #'data.width_shift_range': [0.1], 
+        #'data.height_shift_range': [0.1],
+        #'data.horizontal_flip': [True, False],
+        'data.args': [(0, 0, 0, False), (24, 0.2, 0.2, True)],
+
+        'model.type': ['expr'],
+        'model.nb_layers': [4, 8],
+        'model.nb_filters': [128, 64],
+
+        'train.lr': [0.001]
+    },
     'rwth': {
         'data.train_way': [5, 20],
         'data.test_way': [5],
@@ -59,7 +77,7 @@ def preprocess_config(c):
     return conf_dict
 
 
-for dataset in ['rwth']:
+for dataset in ['ciarp']:
     config_from_file = configparser.ConfigParser()
     config_from_file.read("./src/proto_net/config/config_{}.conf".format(dataset))
 
