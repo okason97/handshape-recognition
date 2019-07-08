@@ -13,7 +13,7 @@ if gpus:
     print(e)
 
 config = {
-    'data.dataset_name': ['rwth','lsa16'], 
+    'data.dataset_name': ['ciarp'], 
     'data.rotation_range': [0,30], 
     'data.width_shift_range': [0,0.2], 
     'data.height_shift_range': [0,0.2], 

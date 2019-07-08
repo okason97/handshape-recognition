@@ -1,4 +1,4 @@
-from .ciarp import load_ciarp
+#from .ciarp import load_ciarp
 from .lsa16 import load_lsa16
 from .rwth import load_rwth
 
@@ -13,9 +13,9 @@ def load(dataset_name):
 
     """
 
-    if dataset_name == "ciarp":
-        x, y = load_ciarp(dataset_name) 
-    elif dataset_name == "lsa16":
+#    if dataset_name == "ciarp":
+#        x, y = load_ciarp(dataset_name) 
+    if dataset_name == "lsa16":
         x, y = load_lsa16(dataset_name)
     elif dataset_name == "rwth":
         x, y = load_rwth(dataset_name)
