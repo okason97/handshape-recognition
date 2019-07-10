@@ -20,9 +20,9 @@ config = {
     'data.width_shift_range': [0,0.2], 
     'data.height_shift_range': [0,0.2], 
     'data.horizontal_flip': [False,True], 
-    'model.growth_rate': [[16,32,64],[16,32,64],[32,64,128]], 
+    'model.growth_rate': [[32,64],[32,64],[64,128]], 
     'model.nb_layers': [[6,12,24,16],[6,12,16],[6,12]],
-    'model.reduction': [0,0.5],
+    'model.reduction': [0.5],
 }
 
 for dataset_name in config['data.dataset_name']:
@@ -39,21 +39,15 @@ for dataset_name in config['data.dataset_name']:
                         train(dataset_name=dataset_name,rotation_range=rotation_range,
                               width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                               horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                              nb_layers=nb_layers,reduction=reduction, batch_size=32)
+                              nb_layers=nb_layers,reduction=reduction, batch_size=16)
                     except:
                         try:
                             train(dataset_name=dataset_name,rotation_range=rotation_range,
                                   width_shift_range=width_shift_range, height_shift_range= height_shift_range,
                                   horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                  nb_layers=nb_layers,reduction=reduction, batch_size=16)
+                                  nb_layers=nb_layers,reduction=reduction, batch_size=8)
                         except:
-                            try:
-                                train(dataset_name=dataset_name,rotation_range=rotation_range,
-                                      width_shift_range=width_shift_range, height_shift_range= height_shift_range,
-                                      horizontal_flip=horizontal_flip,growth_rate=growth_rate,
-                                      nb_layers=nb_layers,reduction=reduction, batch_size=8)
-                            except:
-                                print("Error with {}, growth: {}, reduction: {}. Probably memory".format(nb_layers, growth_rate, reduction))
+                            print("Error with {}, growth: {}, reduction: {}. Probably memory".format(nb_layers, growth_rate, reduction))
                     finally:
                         print("Finished densenet with")
                         print("dataset_name: {}".format(dataset_name))
