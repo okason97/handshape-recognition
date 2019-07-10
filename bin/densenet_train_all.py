@@ -18,9 +18,9 @@ config = {
     'data.width_shift_range': [0,0.2], 
     'data.height_shift_range': [0,0.2], 
     'data.horizontal_flip': [False,True], 
-    'model.growth_rate': [[16,32,64],[16,32,64],[32,64,128]], 
+    'model.growth_rate': [[32,64],[32,64],[64,128]], 
     'model.nb_layers': [[6,12,24,16],[6,12,16],[6,12]],
-    'model.reduction': [0,0.5],
+    'model.reduction': [0.5],
 }
 
 for dataset_name in config['data.dataset_name']:
