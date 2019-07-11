@@ -15,7 +15,7 @@ def eval(config):
     n_support = config['data.test_support']
     n_query = config['data.test_query']
     w, h, c, = list(map(int, config['model.x_dim'].split(',')))
-    model = Prototypical(n_support, n_query, w, h, c)
+    model = Prototypical(n_support, n_query, w, h, c, nb_layers=config['model.nb_layers'], nb_filters=config['model.nb_filters'])
     model_path = f"{config['model.save_path'].format(config['model.type'])}"
     model.load(model_path)
     print("Model loaded.")
