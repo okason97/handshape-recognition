@@ -42,6 +42,7 @@ parser.add_argument("--data.horizontal_flip", type=bool, default=None)
 
 parser.add_argument("--model.x_dim", type=str, default=None)
 parser.add_argument("--model.type", type=str, default=None)
+parser.add_argument("--model.save_path", type=str, default=None)
 parser.add_argument("--model.nb_layers", type=int, default=None)
 parser.add_argument("--model.nb_filters", type=int, default=None)
 
