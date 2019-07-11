@@ -10,7 +10,7 @@ def preprocess_config(c):
     conf_dict = {}
     int_params = ["data.test_way", "data.test_support", "data.test_query",
                   "data.query", "data.support", "data.way", "data.episodes",
-                  "data.gpu", "data.cuda", "train.patience"]
+                  "data.gpu", "data.cuda", "train.patience", 'model.nb_layers', 'model.nb_filters']
     float_params = ["data.rotation_range", "data.width_shift_range", "data.height_shift_range"]
     for param in c:
         if param in int_params:
@@ -42,6 +42,8 @@ parser.add_argument("--data.horizontal_flip", type=bool, default=None)
 
 parser.add_argument("--model.x_dim", type=str, default=None)
 parser.add_argument("--model.type", type=str, default=None)
+parser.add_argument("--model.nb_layers", type=int, default=None)
+parser.add_argument("--model.nb_filters", type=int, default=None)
 
 # Run test
 args = vars(parser.parse_args())
