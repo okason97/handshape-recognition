@@ -36,7 +36,7 @@ def eval_densenet(dataset_name = "rwth", growth_rate = 128, nb_layers = [6,12],
                                                   y,
                                                   test_size=0.33,
                                                   random_state=42)
-    x_test = x_test / 255.0
+    x_train, x_test = x_train / 255.0, x_test / 255.0
 
     n_classes = len(np.unique(y))
 
