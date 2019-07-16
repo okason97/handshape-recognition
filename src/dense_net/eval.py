@@ -18,7 +18,7 @@ from densenet import densenet_model
 def eval_densenet(dataset_name = "rwth", growth_rate = 128, nb_layers = [6,12],
                   reduction = 0.0, lr = 0.001, epochs = 400,
                   max_patience = 25, batch_size = 16, checkpoints = False,
-                  weight_classes = False):
+                  weight_classes = False, model_path = ""):
     
     np.random.seed(2019)
     tf.random.set_seed(2019)
@@ -54,6 +54,7 @@ def eval_densenet(dataset_name = "rwth", growth_rate = 128, nb_layers = [6,12],
     test_datagen.fit(x_train)
 
     model = densenet_model(classes=n_classes, shape=image_shape, growth_rate=growth_rate, nb_layers=nb_layers, reduction=reduction)
+    model.load_weights(model_path)
 
     print("model created")
 
