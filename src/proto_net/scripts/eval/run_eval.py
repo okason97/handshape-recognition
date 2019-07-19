@@ -39,6 +39,8 @@ parser.add_argument("--data.rotation_range", type=float, default=None)
 parser.add_argument("--data.width_shift_range", type=float, default=None)
 parser.add_argument("--data.height_shift_range", type=float, default=None)
 parser.add_argument("--data.horizontal_flip", type=bool, default=None)
+parser.add_argument("--data.train_size", type=float, default=None)
+parser.add_argument("--data.test_size", type=float, default=None)
 
 parser.add_argument("--model.x_dim", type=str, default=None)
 parser.add_argument("--model.type", type=str, default=None)
