@@ -10,8 +10,8 @@ def preprocess_config(c):
     conf_dict = {}
     int_params = ["data.test_way", "data.test_support", "data.test_query",
                   "data.query", "data.support", "data.way", "data.episodes",
-                  "data.gpu", "data.cuda", "train.patience", 'model.nb_layers', 'model.nb_filters']
-    float_params = ["data.rotation_range", "data.width_shift_range", "data.height_shift_range"]
+                  "data.gpu", "data.cuda", "train.patience", "model.nb_layers", "model.nb_filters"]
+    float_params = ["data.rotation_range", "data.width_shift_range", "data.height_shift_range", "data.train_size", "data.test_size"]
     for param in c:
         if param in int_params:
             conf_dict[param] = int(c[param])
