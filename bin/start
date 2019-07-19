@@ -46,7 +46,7 @@ then
     docker build --build-arg DOCKER_ENV=$tag --rm -f dockerfiles/tf-py3-jupyter.Dockerfile -t $name:$tag .
 fi
 
-docker run -d \
+docker run \
     -v $PWD:/develop \
     -v $PWD/results:/tf/results \
     -v $PWD/data:/tf/data \

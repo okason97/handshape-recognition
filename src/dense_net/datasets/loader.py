@@ -15,7 +15,7 @@ def load(dataset_name):
 
     if dataset_name == "ciarp":
         x, y = load_ciarp(dataset_name) 
-    if dataset_name == "lsa16":
+    elif dataset_name == "lsa16":
         x, y = load_lsa16(dataset_name)
     elif dataset_name == "rwth":
         x, y = load_rwth(dataset_name)

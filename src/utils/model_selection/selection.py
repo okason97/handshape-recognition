@@ -1,6 +1,6 @@
 import numpy as np
 
-def train_test_split_balanced(data, target, test_size=0.2, train_size=0 n_train_per_class=0, n_test_per_class=0):
+def train_test_split_balanced(data, target, test_size=0.2, train_size=0, n_train_per_class=0, n_test_per_class=0):
     classes = np.unique(target)
 
     # can give test_size as fraction of input data size of number of samples
