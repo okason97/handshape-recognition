@@ -20,7 +20,8 @@ print(tf.__version__)
 def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range = 0.10,
           height_shift_range = 0.10, horizontal_flip = True, growth_rate = 128,
           nb_layers = [6,12], reduction = 0.0, lr = 0.001, epochs = 400,
-          max_patience = 25, batch_size= 16, checkpoints = False, weight_classes = False):
+          max_patience = 25, batch_size= 16, checkpoints = False, weight_classes = False,
+          train_size=None, test_size=None):
 
     # log
     log_freq = 1
@@ -56,8 +57,10 @@ def train_densenet(dataset_name = "rwth", rotation_range = 10, width_shift_range
 
     x_train, x_test, y_train, y_test = train_test_split(x,
                                                         y,
-                                                        test_size=0.33,
-                                                        random_state=42)
+                                                        train_size=train_size,
+                                                        test_size=test_size,
+                                                        random_state=42,
+                                                        stratify=y)
     x_train, x_test = x_train / 255.0, x_test / 255.0
 
     n_classes = len(np.unique(y))
