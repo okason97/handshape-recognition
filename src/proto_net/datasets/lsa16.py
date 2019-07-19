@@ -54,9 +54,8 @@ def load_lsa16(data_dir, config, splits):
 
     x_train, x_test, y_train, y_test = train_test_split_balanced(features,
                                                                  classes,
-                                                                 test_size=0.33,
-                                                                 n_train_per_class=30,
-                                                                 n_test_per_class=16)
+                                                                 train_size=config['data.train_size'],
+                                                                 test_size=config['data.test_size'])
     x_train, x_test = x_train / 255.0, x_test / 255.0
 
     _, amountPerTrain = np.unique(y_train, return_counts=True)
