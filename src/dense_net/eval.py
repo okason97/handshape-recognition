@@ -16,8 +16,7 @@ from .datasets import load
 from densenet import densenet_model
 
 def eval_densenet(dataset_name = "rwth", growth_rate = 128, nb_layers = [6,12],
-                  reduction = 0.0, lr = 0.001, epochs = 400,
-                  max_patience = 25, batch_size = 16, checkpoints = False,
+                  reduction = 0.0, max_patience = 25, batch_size = 16, checkpoints = False,
                   weight_classes = False, model_path = ""):
     
     np.random.seed(2019)
@@ -118,18 +117,16 @@ def eval_densenet(dataset_name = "rwth", growth_rate = 128, nb_layers = [6,12],
 
     print("starting evaluation")
 
-    for epoch in range(epochs):
-        batches = 0
-        for test_images, test_labels in test_gen:
-            test_step(test_images, test_labels)
-            batches += 1
-            if batches >= len(x_test) / 32:
-                # we need to break the loop by hand because
-                # the generator loops indefinitely
-                break
+    batches = 0
+    for test_images, test_labels in test_gen:
+        test_step(test_images, test_labels)
+        batches += 1
+        if batches >= len(x_test) / 32:
+            # we need to break the loop by hand because
+            # the generator loops indefinitely
+            break
 
-        if (epoch % log_freq == 0):
-            print ('Epoch: {} Test Loss: {} Test Acc: {}'.format(epoch,
-                                                                 test_loss.result(),
-                                                                 test_accuracy.result()*100))
+    print ('Epoch: {} Test Loss: {} Test Acc: {}'.format(epoch,
+                                                         test_loss.result(),
+                                                         test_accuracy.result()*100))
 
