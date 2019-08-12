@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# https://hub.docker.com/r/rocker/rstudio/
+
+if [ "$1" = "--stop" ]; then
+  docker stop rstudio 2> /dev/null
+  docker rm rstudio 2> /dev/null
+  echo "Deleted RStudio Container"
+  exit 0
+fi
+
+docker run --rm --name rstudio -d -p 8787:8787 -e USER=$USER -e PASSWORD=$USER -v ${1:-$(pwd)}:/home/$USER/handshape-recognition rocker/rstudio > /dev/null
+echo "RStudio is listening in localhost:8787"
