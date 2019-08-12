@@ -17,8 +17,8 @@ from densenet import densenet_model
 
 def eval_densenet(dataset_name = "rwth", growth_rate = 128, nb_layers = [6,12],
                   reduction = 0.0, max_patience = 25, batch_size = 16, checkpoints = False,
-                  weight_classes = False, model_path = ""):
-    
+                  weight_classes = False, model_path = "", test_size=0.25, train_size=0.75):
+
     np.random.seed(2019)
     tf.random.set_seed(2019)
 
@@ -33,8 +33,9 @@ def eval_densenet(dataset_name = "rwth", growth_rate = 128, nb_layers = [6,12],
 
     x_train, x_test, _, y_test = train_test_split(x,
                                                   y,
-                                                  test_size=0.33,
-                                                  random_state=42)
+                                                  test_size=test_size,
+						  train_size=train_size,
+                                                  stratify=y)
     x_train, x_test = x_train / 255.0, x_test / 255.0
 
     n_classes = len(np.unique(y))
@@ -126,7 +127,5 @@ def eval_densenet(dataset_name = "rwth", growth_rate = 128, nb_layers = [6,12],
             # the generator loops indefinitely
             break
 
-    print ('Epoch: {} Test Loss: {} Test Acc: {}'.format(epoch,
-                                                         test_loss.result(),
-                                                         test_accuracy.result()*100))
-
+    print ('Test Loss: {} Test Acc: {}'.format(test_loss.result(),
+                                               test_accuracy.result()*100))
