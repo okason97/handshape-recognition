@@ -4,12 +4,12 @@ from train_setup import train
 
 configs = {
     'lsa16': {
-        'data.train_way': [5, 16],
+        'data.train_way': [5],
         'data.test_way': [5],
         # done (1, 1, 1, 1) in previous experiments
         'data.support_query': [(5, 5, 5, 5)],
-        'data.train_size': [67, 50, 33],
-        'data.test_size': [33],
+        'data.train_size': [0.33, 0.5, 0.64, 0.75],
+        'data.test_size': [0.25],
 
         #'data.rotation_range': [0, 25], 
         #'data.width_shift_range': [0.1], 
@@ -24,12 +24,12 @@ configs = {
         'train.lr': [0.001]
     },
     'ciarp': {
-        'data.train_way': [5, 10],
+        'data.train_way': [5],
         'data.test_way': [5],
         # done (1, 1, 1, 1) in previous experiments
         'data.support_query': [(5, 5, 5, 5)],
-        'data.train_size': [67, 50, 33],
-        'data.test_size': [33],
+        'data.train_size': [0.33, 0.5, 0.64, 0.75],
+        'data.test_size': [0.25],
 
         #'data.rotation_range': [0, 25], 
         #'data.width_shift_range': [0.1], 
@@ -44,11 +44,11 @@ configs = {
         'train.lr': [0.001]
     },
     'rwth': {
-        'data.train_way': [5, 40],
+        'data.train_way': [20],
         'data.test_way': [5],
         'data.support_query': [(5, 5, 5, 5)],
-        'data.train_size': [67, 50, 33],
-        'data.test_size': [33],
+        'data.train_size': [0.33, 0.5, 0.64, 0.75],
+        'data.test_size': [0.25],
         
         #'data.rotation_range': [0, 25], 
         #'data.width_shift_range': [0.1], 
@@ -83,7 +83,7 @@ def preprocess_config(c):
     return conf_dict
 
 
-for dataset in ['ciarp']:
+for dataset in ['ciarp', 'lsa16', 'rwth']:
     config_from_file = configparser.ConfigParser()
     config_from_file.read("./src/proto_net/config/config_{}.conf".format(dataset))
 
